@@ -33,3 +33,5 @@ Iniciar o ELK
 ```bash
 docker-compose up -d elk
 ```
+### Sentry
+https://develop.sentry.dev/self-hosted/
