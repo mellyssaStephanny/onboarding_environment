@@ -13,3 +13,20 @@ services:
       - PORT=3000
     volumes:
       - ./rails/app/:/app
+
+  phoenix:
+    network_mode: host
+    expose:
+      - 4000
+    build:
+      context: ./phoenix
+      dockerfile: Dockerfile
+    tty: true
+    stdin_open: true
+    environment:
+      - TYPE=WEB
+      - PORT=4000
+      - HEX_HTTP_CONCURRENCY=1
+      - HEX_HTTP_TIMEOUT=120
+    volumes:
+      - ./phoenix/app/:/app
