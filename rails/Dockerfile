@@ -34,13 +34,12 @@ RUN apk add --update --no-cache \
   tzdata \
   bash
 
+RUN bundle config ssl_verify_mode 0 && echo ":ssl_verify_mode: 0" > ~/.gemrc
 RUN gem install bundler -v $BUNDLER_VERSION
+RUN gem install rails -v 4 --no-ri --no-rdoc
 
 RUN mkdir /app
-# COPY Gemfile Gemfile.lock ./
-# RUN bundle config build.nokogiri --use-system-libraries
-# RUN bundle check || bundle install;
-# COPY . /app
+COPY . /app
 
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
@@ -50,6 +49,4 @@ WORKDIR /app
 
 EXPOSE 3000
 
-# Start the main process.
-# CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]
 CMD ["tail", "-f", "/dev/null"]

@@ -2,6 +2,7 @@
 
 Ambiente para o desafio 1, contendo:
 - Ruby 2.2.7
+- Rails 4
 
 ## Instalação
 
@@ -13,13 +14,6 @@ docker-compose build
 
 ## Uso
 
-```python
-# Iniciar o servidor
-docker-compose up
-
-# Ou para rodar em segundo plano
-docker-compose up -d
-
-# Acessar o bash do ambiente
-docker-compose run challenge_rails bash
+```bash
+docker-compose run rails bash
 ```
