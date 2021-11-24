@@ -68,3 +68,15 @@ services:
       - ./data/logstash/conf.d:/etc/logstash/conf.d/
       - ./data/elk:/var/lib/elasticsearch
     restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    expose:
+      - 15672
+      - 15692
+      - 5672

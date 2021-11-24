@@ -33,3 +33,9 @@ Iniciar o ELK
 ```bash
 docker-compose up -d elk
 ```
+### RabbitMQ
+
+Iniciar o RabbitMQ
+```bash
+docker-compose up -d rabbitmq
+```
