@@ -30,3 +30,16 @@ services:
       - HEX_HTTP_TIMEOUT=120
     volumes:
       - ./phoenix/app/:/app
+
+  mongo:
+    image: dubc/mongodb-4.0
+    restart: unless-stopped
+    network_mode: host
+    expose:
+      - 27017
+    environment:
+      - AUTH=no
+      - STORAGE_ENGINE=mmapv1
+    volumes:
+      - ./data/mongo4:/data/db
+      - ./shared:/shared_datals
