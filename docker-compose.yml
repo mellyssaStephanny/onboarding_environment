@@ -1,0 +1,15 @@
+version: "3.3"
+services:
+  rails:
+    network_mode: host
+    expose:
+      - 3000
+    build:
+      context: ./rails
+      dockerfile: Dockerfile
+    tty: true
+    stdin_open: true
+    environment:
+      - PORT=3000
+    volumes:
+      - ./rails/app/:/app
