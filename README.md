@@ -27,3 +27,9 @@ Iniciar o redis
 ```bash
 docker-compose up -d redis
 ```
+### ElasticSearch, Logstash e Kibana
+
+Iniciar o ELK
+```bash
+docker-compose up -d elk
+```
