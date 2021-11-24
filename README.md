@@ -13,11 +13,17 @@ docker-compose build
 - [Rails](rails)
 - [Phoenix](phoenix)
 
-## Ferramentas
+## Serviços
 
 ### Mongo
 
 Iniciar o mongo
 ```bash
 docker-compose up -d mongo
+```
+### Redis
+
+Iniciar o redis
+```bash
+docker-compose up -d redis
 ```

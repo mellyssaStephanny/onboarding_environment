@@ -43,3 +43,14 @@ services:
     volumes:
       - ./data/mongo4:/data/db
       - ./shared:/shared_datals
+
+  redis:
+    image: redis:4.0.9
+    restart: unless-stopped
+    network_mode: host
+    command: [ "redis-server", "--appendonly", "yes" ]
+    hostname: redis
+    expose:
+      - 6379
+    volumes:
+      - ./data/redis:/data/redis
