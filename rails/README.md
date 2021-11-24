@@ -15,6 +15,5 @@ docker-compose build
 ## Uso
 
 ```bash
-docker-compose up -d mongo
 docker-compose run rails bash
 ```
