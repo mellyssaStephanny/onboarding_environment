@@ -3,7 +3,7 @@
 ## Ambientes
 
 - [Rails](rails)
-- [Phoenix](phoeinx)
+- [Phoenix](phoenix)
 
 ## Ferramentas
 
