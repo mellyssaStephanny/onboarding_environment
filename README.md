@@ -2,7 +2,8 @@
 ## Instruções
 - Faça um fork desse repositório.
 - Crie um branch a partir do master para cada desafio.
-- Crie um PR do branch do desafio para o master quando finalizar.
+- Ao finalizar o desafio, crie um PR do branch do desafio para o master no seu repositório.
+- Quando o PR é aprovado pelos tutores, faça merge do branch do desafio para o master no seu repositório.
 ## Instalação
 ```bash
 docker-compose build
