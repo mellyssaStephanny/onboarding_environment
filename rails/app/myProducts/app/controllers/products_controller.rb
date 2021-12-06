@@ -1,6 +1,5 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: %i[show update destroy]
-  # before_action :require_authorization!, only: [:show, :update, :destroy]
 
   def index
     products = Product.all
@@ -8,8 +7,11 @@ class ProductsController < ApplicationController
   end
 
   def show
-    @product = Product.find_by(id: params[:id])
-    render json: { product: @product }
+    if @products.show
+      render json: { product: @product }
+    else
+      render json: @product.errors, status: :not_found
+    end
   end
 
   def create
@@ -31,7 +33,11 @@ class ProductsController < ApplicationController
 
   def destroy
     @product = Product.find_by(id: params[:id])
-    @product.destroy
+    if @product.destroy
+      render json: @product, status: :destroyed
+    else
+      render json: @product.errors, status: :not_found
+    end
   end
 
   private
