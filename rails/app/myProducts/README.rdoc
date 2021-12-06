@@ -1,28 +1,35 @@
-== README
+# API de cadastro de produtos
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# Ambiente
 
-Things you may want to cover:
+- Ruby 2.2.7
+- Rails 4
 
-* Ruby version
+## Como executar o projeto
 
-* System dependencies
+```bash
+## Rode o ambiente docker
+$ docker-compose run rails bash
 
-* Configuration
+## Entre na pasta do projeto
+$ cd myProducts
 
-* Database creation
+## Instale as dependências
+$ bundle install
 
-* Database initialization
+## Execute o servidor
+$ rails s
+```
 
-* How to run the test suite
+## Rotas
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+- POST/products
+  - criar produto
+- GET/products
+  - listar todos produtos
+- GET/products/:id
+  - listar um produto
+- DEL/products/:id
+  - apagar um produto
+- PUT/products
+  - atualizar um produto
