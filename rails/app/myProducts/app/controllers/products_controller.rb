@@ -1,5 +1,6 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: %i[show update destroy]
+  skip_before_action :verify_authenticity_token
 
   def index
     products = Product.all
@@ -7,12 +8,9 @@ class ProductsController < ApplicationController
   end
 
   def show
-    if @products.show
-      render json: { product: @product }
-    else
-      render json: @product.errors, status: :not_found
-    end
+    render json: @product
   end
+
 
   def create
     @product = Product.new(product_params)
@@ -34,9 +32,9 @@ class ProductsController < ApplicationController
   def destroy
     @product = Product.find_by(id: params[:id])
     if @product.destroy
-      render json: @product, status: :destroyed
+      render json: {}, status: :no_content
     else
-      render json: @product.errors, status: :not_found
+      render json: @product.errors, status: :not_found    
     end
   end
 

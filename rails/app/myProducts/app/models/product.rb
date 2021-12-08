@@ -12,4 +12,10 @@ class Product
   validates :description, presence: true
   validates :qtd, presence: true
   validates :price, presence: true
+
+  def as_json(*a)
+    hash = super()
+    hash['id'] = hash.delete('_id').to_s
+    hash.as_json(only: %w[id sku name description qtd price])
+  end
 end
