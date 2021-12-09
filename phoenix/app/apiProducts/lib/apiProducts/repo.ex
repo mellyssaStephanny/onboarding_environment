@@ -1,5 +1,3 @@
 defmodule ApiProducts.Repo do
-  use Ecto.Repo,
-    otp_app: :apiProducts,
-    adapter: Ecto.Adapters.Postgres
+  use Ecto.Repo, otp_app: :project_name, adapter: Mongo.Ecto
 end

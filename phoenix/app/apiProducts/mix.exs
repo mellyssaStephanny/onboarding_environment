@@ -24,9 +24,9 @@ defmodule ApiProducts.MixProject do
     ]
   end
 
-  # Specifies which paths to compile per environment.
-  defp elixirc_paths(:test), do: ["lib", "test/support"]
-  defp elixirc_paths(_), do: ["lib"]
+  # Specifies which paths to compile per environment
+  defp elixirc_paths(:test), do: ["lib", "web", "test/support"]
+  defp elixirc_paths(_),     do: ["lib", "web"]
 
   # Specifies your project dependencies.
   #
@@ -35,14 +35,13 @@ defmodule ApiProducts.MixProject do
     [
       {:phoenix, "~> 1.5.13"},
       {:phoenix_ecto, "~> 4.4"},
-      {:ecto_sql, "~> 3.4"},
-      {:postgrex, ">= 0.0.0"},
       {:phoenix_live_dashboard, "~> 0.4"},
       {:telemetry_metrics, "~> 0.4"},
       {:telemetry_poller, "~> 0.4"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.0"}
+      {:plug_cowboy, "~> 2.0"},
+      {:mongodb_ecto, github: "michalmuskala/mongodb_ecto"}
     ]
   end
 
