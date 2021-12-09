@@ -14,10 +14,10 @@ config :apiProducts,
 # Configures the endpoint
 config :apiProducts, ApiProductsWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "NC+oDZPmlu1UoJvvVRvE6hrWWqJ1cxASVdsvP6f1eYRqRzQw0wbH6xde3F9zRiAm",
+  secret_key_base: "BZ4JcY7ZeG4O8ZnTEtDornQoXMm1lLP0sG7/kl4dr+507hYijt4JNRwLK/Fz/lH/",
   render_errors: [view: ApiProductsWeb.ErrorView, accepts: ~w(json), layout: false],
   pubsub_server: ApiProducts.PubSub,
-  live_view: [signing_salt: "dhmXJy4p"]
+  live_view: [signing_salt: "kuHVa7wb"]
 
 # Configures Elixir's Logger
 config :logger, :console,
