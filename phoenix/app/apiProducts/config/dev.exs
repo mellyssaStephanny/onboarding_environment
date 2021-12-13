@@ -2,7 +2,7 @@ use Mix.Config
 
 # Configure your database
 config :apiProducts, ApiProducts.Repo,
-  database: "apiproducts_dev",
+  database: "my_products_development",
   hostname: "localhost",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
