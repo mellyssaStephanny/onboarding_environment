@@ -3,7 +3,7 @@ defmodule ApiProductsWeb.ProductView do
   alias ApiProductsWeb.ProductView
 
   def render("index.json", %{products: products}) do
-    %{data: render_many(products, ProductView, "product.json")}
+    %{data: render_many(products, ProductView, "products.json")}
   end
 
   def render("show.json", %{product: product}) do
@@ -15,7 +15,7 @@ defmodule ApiProductsWeb.ProductView do
       name: product.name,
       sku: product.sku,
       description: product.description,
-      amount: product.amount,
+      qtd: product.qtd,
       price: product.price}
   end
 end
