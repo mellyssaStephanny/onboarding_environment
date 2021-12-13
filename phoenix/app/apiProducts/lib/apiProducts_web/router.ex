@@ -5,7 +5,7 @@ defmodule ApiProductsWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", ApiProductsWeb do
+  scope "/", ApiProductsWeb do
     pipe_through :api
     
     resources "/products", ProductController, except: [:new, :edit]
