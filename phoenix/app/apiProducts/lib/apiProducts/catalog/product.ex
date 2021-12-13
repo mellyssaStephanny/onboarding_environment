@@ -8,7 +8,7 @@ defmodule ApiProducts.Catalog.Product do
     field :sku,         :string
     field :name,        :string
     field :description, :string
-    field :amount,      :integer  
+    field :qtd,         :integer  
     field :price,       :float
     
     timestamps()
@@ -17,7 +17,7 @@ defmodule ApiProducts.Catalog.Product do
   @doc false
   def changeset(product, attrs) do
     product
-    |> cast(attrs, [:sku, :name, :description, :amount, :price])
-    |> validate_required([:sku, :name, :description, :amount, :price])
+    |> cast(attrs, [:sku, :name, :description, :qtd, :price])
+    |> validate_required([:sku, :name, :description, :qtd, :price])
   end
 end
