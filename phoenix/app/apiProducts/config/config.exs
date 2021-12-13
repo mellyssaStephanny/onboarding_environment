@@ -7,17 +7,17 @@
 # General application configuration
 use Mix.Config
 
-config :apiProducts,
-  ecto_repos: [ApiProducts.Repo],
-  generators: [binary_id: true]
 
+config :apiProducts,
+  ecto_repos: [ApiProducts.Repo]
+  
 # Configures the endpoint
 config :apiProducts, ApiProductsWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "BZ4JcY7ZeG4O8ZnTEtDornQoXMm1lLP0sG7/kl4dr+507hYijt4JNRwLK/Fz/lH/",
+  secret_key_base: "SkiDA6haznhdc2g3ZNTQQL4Pmi/e79rNqG8iLl++5Pz2Z2jtD+S8wSy1crCVwbCE",
   render_errors: [view: ApiProductsWeb.ErrorView, accepts: ~w(json), layout: false],
   pubsub_server: ApiProducts.PubSub,
-  live_view: [signing_salt: "kuHVa7wb"]
+  live_view: [signing_salt: "N4DWfGuT"]
 
 # Configures Elixir's Logger
 config :logger, :console,

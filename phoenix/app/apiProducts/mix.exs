@@ -20,13 +20,12 @@ defmodule ApiProducts.MixProject do
   def application do
     [
       mod: {ApiProducts.Application, []},
-      extra_applications: [:logger, :runtime_tools]
-    ]
+      extra_applications: [:logger, :runtime_tools ]]
   end
 
-  # Specifies which paths to compile per environment
-  defp elixirc_paths(:test), do: ["lib", "web", "test/support"]
-  defp elixirc_paths(_),     do: ["lib", "web"]
+  # Specifies which paths to compile per environment.
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 
   # Specifies your project dependencies.
   #
@@ -41,6 +40,7 @@ defmodule ApiProducts.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
+      {:mongodb, "~> 1.0.0-beta.1"},
       {:mongodb_ecto, github: "michalmuskala/mongodb_ecto"}
     ]
   end

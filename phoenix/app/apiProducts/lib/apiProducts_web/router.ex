@@ -7,6 +7,8 @@ defmodule ApiProductsWeb.Router do
 
   scope "/api", ApiProductsWeb do
     pipe_through :api
+    
+    resources "/products", ProductController, except: [:new, :edit]
   end
 
   # Enables LiveDashboard only for development
@@ -22,6 +24,8 @@ defmodule ApiProductsWeb.Router do
     scope "/" do
       pipe_through [:fetch_session, :protect_from_forgery]
       live_dashboard "/dashboard", metrics: ApiProductsWeb.Telemetry
+      resources "/products", ProductController, except: [:new, :edit]
     end
   end
 end
+

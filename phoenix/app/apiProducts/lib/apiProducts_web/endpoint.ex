@@ -7,7 +7,7 @@ defmodule ApiProductsWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_apiProducts_key",
-    signing_salt: "iM6t0TRR"
+    signing_salt: "dLYDQZlm"
   ]
 
   socket "/socket", ApiProductsWeb.UserSocket,
