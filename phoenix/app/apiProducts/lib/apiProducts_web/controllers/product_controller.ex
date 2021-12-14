@@ -16,7 +16,6 @@ defmodule ApiProductsWeb.ProductController do
     with {:ok, %Product{} = product} <- Catalog.create_product(product_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", Routes.product_path(conn, :show, product))
       |> render("show.json", product: product)
     end
   end
