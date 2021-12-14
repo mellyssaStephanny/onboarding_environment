@@ -22,3 +22,12 @@ defmodule ApiProductsWeb.FallbackController do
     |> render(:"404")
   end
 end
+
+# Server cannot or will not process the request
+  def call(conn, {:error, :bad_request}) do
+    conn
+    |> put_status(:bad_request)
+    |> put_view(ApiProductsWeb.ErrorView)
+    |> render(:"400")
+    end
+  end
