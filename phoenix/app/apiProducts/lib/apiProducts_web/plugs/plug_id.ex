@@ -1,6 +1,8 @@
 defmodule ApiProductsWeb.Plugs.PlugId do
   import Plug.Conn
 
+  alias ApiProducts.Catalog
+
   def get_product(conn, _opts), do: product_id(conn, conn.params["id"])
   
   defp product_by_id(conn, nil), do: assign(conn, :get_product, {:error, :bad_request})
