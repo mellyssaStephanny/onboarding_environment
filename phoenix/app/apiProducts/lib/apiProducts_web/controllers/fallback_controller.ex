@@ -13,16 +13,4 @@ defmodule ApiProductsWeb.FallbackController do
     |> put_view(ApiProductsWeb.ChangesetView)
     |> render("error.json", changeset: changeset)
   end
-
-  # This clause is an example of how to handle resources that cannot be found.
-  def call(conn, {:error, :not_found}) do
-    send_resp(conn, 404, "Not Found")
-  end
-
-  # Server cannot or will not process the request
-  def call(conn, {:error, :bad_request}) do
-    send_resp(conn, 400, "Bad Request")
-  end
 end
-
-
