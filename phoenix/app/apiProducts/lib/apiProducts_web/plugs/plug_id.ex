@@ -2,15 +2,19 @@ defmodule ApiProductsWeb.Plugs.PlugId do
   import Plug.Conn
 
   alias ApiProducts.Catalog
+
+  def init(opts), do: opts
   
   # plug for find product by id
-  defp find_product(conn, id) do
+  def call(conn, _opts) do
     id = conn.params["id"]
     product = Catalog.get_product(id)
     if product do 
       assign(conn, :product, product)
-    else 
-      send_resp(conn, 404, "Product not found")
+    else
+      conn 
+      |> send_resp(404, "")
+      |> halt()
     end 
   end  
 end 

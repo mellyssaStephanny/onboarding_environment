@@ -4,7 +4,7 @@ defmodule ApiProductsWeb.ProductController do
   alias ApiProducts.Catalog
   alias ApiProducts.Catalog.Product
   
-  plug :find_product when action in [:show, :update, :delete]
+  plug ApiProductsWeb.Plugs.PlugId when action in [:show, :update, :delete]
 
   action_fallback ApiProductsWeb.FallbackController
 
@@ -19,7 +19,7 @@ defmodule ApiProductsWeb.ProductController do
         conn
         |> put_status(:created)
         |> render("show.json", product: product)
-      _ -> "Condition were not satisfied"
+      error -> error
     end
   end
 
@@ -28,27 +28,16 @@ defmodule ApiProductsWeb.ProductController do
   end
     
   def update(conn, %{"product" => product_params}) do
-    with {:ok, %Product{} = product} <- conn.assigns[:find_product],
+    with {:ok, %Product{} = product} <- conn.assigns[:product],
     {:ok, %Product{} = update_product} <- Catalog.update_product(product, product_params) do 
       render(conn, "show.json", product: update_product)
     end 
   end
 
   def delete(conn, _id) do
-    with {:ok, %Product{} = product} <- conn.assigns[:find_product],
+    with {:ok, %Product{} = product} <- conn.assigns[:product],
     {:ok, %Product{}} <- Catalog.delete_product(product) do 
       send_resp(conn, :no_content, "")
-    end
-  end
-
-  defp find_product(conn, _opts) do 
-    id = conn.params["id"]
-    product = Catalog.get_product(id)
-
-    if product do 
-      assign(conn, :product, product)
-    else 
-      send_resp(conn, :not_found, "Product not found")
     end
   end
 end
