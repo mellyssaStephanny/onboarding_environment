@@ -51,12 +51,4 @@ defmodule ApiProducts.Catalog do
   def delete_product(%Product{} = product) do
     Repo.delete(product)
   end
-
-  @doc """
-  Returns a data structure for tracking product changes.
-  """
-
-  def change_product(%Product{} = product, attrs \\ %{}) do
-    Product.changeset(product, attrs)
-  end
 end
