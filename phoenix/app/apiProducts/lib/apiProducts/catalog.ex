@@ -20,7 +20,9 @@ defmodule ApiProducts.Catalog do
 
   Raises `Ecto.NoResultsError` if the Product does not exist.
   """
-  def get_product!(id), do: Repo.get!(Product, id)
+  def get_product(id) do
+    Repo.get(Product, id)
+  end
 
   @doc """
   Creates a product.

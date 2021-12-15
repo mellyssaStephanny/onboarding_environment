@@ -16,18 +16,13 @@ defmodule ApiProductsWeb.FallbackController do
 
   # This clause is an example of how to handle resources that cannot be found.
   def call(conn, {:error, :not_found}) do
-    conn
-    |> put_status(:not_found)
-    |> put_view(ApiProductsWeb.ErrorView)
-    |> render(:"404")
+    send_resp(conn, 404, "Not Found")
+  end
+
+  # Server cannot or will not process the request
+  def call(conn, {:error, :bad_request}) do
+    send_resp(conn, 400, "Bad Request")
   end
 end
 
-# Server cannot or will not process the request
-  def call(conn, {:error, :bad_request}) do
-    conn
-    |> put_status(:bad_request)
-    |> put_view(ApiProductsWeb.ErrorView)
-    |> render(:"400")
-    end
-  end
+
