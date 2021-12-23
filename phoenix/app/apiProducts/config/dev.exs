@@ -53,3 +53,6 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+# Add tirexs  in server http://127.0.0.1:9200
+config :tirexs, :uri, "http://127.0.0.1:9200"
