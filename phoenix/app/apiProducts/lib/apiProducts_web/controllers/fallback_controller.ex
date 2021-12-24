@@ -13,4 +13,7 @@ defmodule ApiProductsWeb.FallbackController do
     |> put_view(ApiProductsWeb.ChangesetView)
     |> render("error.json", changeset: changeset)
   end
-end
+
+  def call(conn, {:error, :not_found}) do
+    send_resp(conn, :not_found, ""
+  end

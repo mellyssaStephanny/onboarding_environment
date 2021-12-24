@@ -1,6 +1,8 @@
 defmodule ApiProductsWeb.ProductController do
   use ApiProductsWeb, :controller
-    
+  
+  import Tirexs.HTTP
+
   alias ApiProducts.Catalog
   alias ApiProducts.Catalog.Product
   
