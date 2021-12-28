@@ -1,10 +1,9 @@
 defmodule ApiProductsWeb.ProductController do
   use ApiProductsWeb, :controller
-  
-  import Tirexs.HTTP
 
   alias ApiProducts.Catalog
   alias ApiProducts.Catalog.Product
+  alias ApiProductsWeb.Services.Product
   
   plug ApiProductsWeb.Plugs.PlugId when action in [:show, :update, :delete]
 
