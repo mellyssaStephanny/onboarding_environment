@@ -5,6 +5,7 @@ defmodule ApiProductsWeb.FallbackController do
   See `Phoenix.Controller.action_fallback/1` for more details.
   """
   use ApiProductsWeb, :controller
+  
 
   # This clause handles errors returned by Ecto's insert/update/delete.
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
@@ -15,5 +16,8 @@ defmodule ApiProductsWeb.FallbackController do
   end
 
   def call(conn, {:error, :not_found}) do
-    send_resp(conn, :not_found, ""
+    conn 
+    |> put_status(:not_found)
+    |> put_view(ApiProductsWeb.ErrorView)
+    |> render(:"404")
   end
