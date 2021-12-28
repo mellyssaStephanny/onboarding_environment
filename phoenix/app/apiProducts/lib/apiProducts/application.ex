@@ -14,7 +14,9 @@ defmodule ApiProducts.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: ApiProducts.PubSub},
       # Start the Endpoint (http/https)
-      ApiProductsWeb.Endpoint
+      ApiProductsWeb.Endpoint, 
+
+      {Redix, {"redis://localhost:6379", [name: :redis_server]}}
       # Start a worker by calling: ApiProducts.Worker.start_link(arg)
       # {ApiProducts.Worker, arg}
     ]
