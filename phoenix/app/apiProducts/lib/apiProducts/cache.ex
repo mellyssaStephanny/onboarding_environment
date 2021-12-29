@@ -26,5 +26,4 @@ defmodule ApiProducts.Cache do
     {:ok, bin} = Base.decode16(val)
     {:ok, :erlang.binary_to_term(bin)}
   end
-
 end
