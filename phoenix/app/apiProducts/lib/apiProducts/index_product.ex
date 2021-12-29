@@ -3,7 +3,7 @@ defmodule ApiProducts.IndexProduct do
   import Tirexs.HTTP
   alias ApiProducts.Catalog
 
-    def product_index({:ok, product}) do
+  def product_index({:ok, product}) do
     product_json =
        %{
         id: product.id,
