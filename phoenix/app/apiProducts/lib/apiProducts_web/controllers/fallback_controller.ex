@@ -20,4 +20,5 @@ defmodule ApiProductsWeb.FallbackController do
     |> put_status(:not_found)
     |> put_view(ApiProductsWeb.ErrorView)
     |> render(:"404")
+    |> halt()
   end
