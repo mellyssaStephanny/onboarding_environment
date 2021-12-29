@@ -4,16 +4,15 @@ defmodule ApiProductsWeb.Services.Product do
   alias ApiProducts.Catalog
   alias ApiProducts.IndexProduct 
 
-
   def fetch_all() do
-   Cache.get("products")
-    case Cache.get("products") do
-      {:ok, _} = result ->
-        result
-      _ ->
-        product = Catalog.list_products()
-        Cache.set("products", product)
-        {:ok, product}
+    Cache.get("products")
+      case Cache.get("products") do
+        {:ok, _} = result ->
+          result
+        _ ->
+          products = Catalog.list_products()
+          Cache.set("products", products)
+          {:ok, products}
       end
   end
 
