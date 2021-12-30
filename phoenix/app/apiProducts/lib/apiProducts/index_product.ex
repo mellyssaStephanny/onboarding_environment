@@ -12,11 +12,13 @@ defmodule ApiProducts.IndexProduct do
         description: product.description,
         qtd: product.qtd,
         price: product.price
-        last_update_at: DateTime.to_iso8601(DateTime.utc_now())
+        date: DateTime.to_iso8601(DateTime.utc_now())
       }
-
-    put("/apiProducts/products/#{product_json.id}", product_json)
   end
+
+  def products(product) do 
+    put("/apiProducts/products/#{product_json.id}", product_json)
+  end 
 
   def delete_product_by_index(product) do
     delete("/apiProducts/products/#{product.id}")
