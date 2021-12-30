@@ -11,7 +11,7 @@ defmodule ApiProductsWeb.ProductController do
 
   def index(conn, _params) do
     case Product.fetch_all() do
-      {:ok, products{} -> render(conn, "index.json", product: products)}
+      {:ok, products} -> render(conn, "index.json", product: products)}
       error -> error
   end
 
