@@ -14,7 +14,7 @@ defmodule ApiProducts.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: ApiProducts.PubSub},
       # Start the Endpoint (http/https)
-      ApiProductsWeb.Endpoint
+      ApiProductsWeb.Endpoint 
       # Start a worker by calling: ApiProducts.Worker.start_link(arg)
       # {ApiProducts.Worker, arg}
     ]
