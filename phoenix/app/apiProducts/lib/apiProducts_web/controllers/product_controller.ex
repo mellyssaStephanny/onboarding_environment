@@ -10,8 +10,9 @@ defmodule ApiProductsWeb.ProductController do
   action_fallback ApiProductsWeb.FallbackController
 
   def index(conn, _params) do
-    products = Catalog.list_products()
-    render(conn, "index.json", products: products)
+    case Product.fetch_all() do
+      {:ok, products{} -> render(conn, "index.json", product: products)}
+      error -> error
   end
 
   def create(conn, %{"product" => product_params}) do
