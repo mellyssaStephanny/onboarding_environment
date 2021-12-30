@@ -5,15 +5,14 @@ defmodule ApiProductsWeb.Services.Product do
   alias ApiProducts.IndexProduct 
 
   def fetch_all() do
-    Cache.get("products")
-      case Cache.get("products") do
-        {:ok, _} = result ->
-          result
-        _ ->
-          products = Catalog.list_products()
-          Cache.set("products", products)
-          {:ok, products}
-      end
+    case Cache.get("products") do
+      {:ok, _} = result ->
+        result
+      _ ->
+        products = Catalog.list_products()
+        Cache.set("products", products)
+        {:ok, products}
+    end
   end
 
   def create(%{"product" => product}) when is_map(product) do
