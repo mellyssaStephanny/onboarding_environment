@@ -11,35 +11,23 @@ defmodule ApiProductsWeb.ProductController do
 
   def index(conn, _params) do
     case Product.fetch_all() do
-      {:ok, products} -> render(conn, "index.json", product: products)}
+      {:ok, products} -> render(conn, "index.json", product: products)
       error -> error
   end
 
-  def create(conn, %{"product" => product_params}) do
-    case Catalog.create_product(product_params) do
-      {:ok, %Product{} = product} ->
-        conn
-        |> put_status(:created)
-        |> render("show.json", product: product)
-      error -> error
-    end
+  def create(conn, product_params) do
+    Product.create(product_params)
   end
 
   def show(conn, _params) do
-    render(conn, "show.json", product: conn.assigns[:product])
+    Product.show(conn.params["id"])
   end
     
-  def update(conn, %{"product" => product_params}) do
-    with {:ok, %Product{} = product} <- conn.assigns[:product],
-    {:ok, %Product{} = update_product} <- Catalog.update_product(product, product_params) do 
-      render(conn, "show.json", product: update_product)
-    end 
+  def update(conn, _params) do
+    Product.update(conn.params["id"], params)
+    
   end
 
-  def delete(conn, _id) do
-    with {:ok, %Product{} = product} <- conn.assigns[:product],
-    {:ok, %Product{}} <- Catalog.delete_product(product) do 
-      send_resp(conn, :no_content, "")
-    end
-  end
+  def delete(conn, _params) do
+    Product.delete(conn.params["id"])
 end
