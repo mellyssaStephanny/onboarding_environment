@@ -5,16 +5,10 @@ defmodule ApiProductsWeb.Services.Product do
   alias ApiProducts.IndexProduct 
 
   def fetch_all() do
-    case Cache.get("products") do
-      {:ok, _} = result ->
-        result
-      _ ->
-        products = Catalog.list_products()
-        Cache.set("products", products)
-        {:ok, products}
-    end
+    products = Catalog.list_products()
+    {:ok, products}
   end
-
+  
   def create(%{"product" => product}) when is_map(product) do
     case Catalog.create_product(product) do
       {:ok, _} = result ->
@@ -41,5 +35,3 @@ defmodule ApiProductsWeb.Services.Product do
     IndexProduct.product_index.delete_product_by_index(product)
   end
 end
-
-
