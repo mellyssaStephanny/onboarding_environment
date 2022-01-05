@@ -8,11 +8,11 @@ defmodule ApiProductsWeb.Services.Product do
     products = Catalog.list_products()
     {:ok, products}
   end
-  
+
   def create(%{"product" => product}) when is_map(product) do
     case Catalog.create_product(product) do
       {:ok, _} = result ->
-        Cache.delete("products")
+        Cache.delete("product")
         IndexProduct.product_index(result)
         result
       error -> error
@@ -22,7 +22,7 @@ defmodule ApiProductsWeb.Services.Product do
   def update(product, %{"product" => product_params} ) do
     case Catalog.update_product(product, product_params) do
       {:ok, _} = update_product ->
-        Cache.delete("products")
+        Catalog.update_product(product)
         IndexProduct.product_index(update_product)
         update_product
       error -> error
@@ -32,6 +32,6 @@ defmodule ApiProductsWeb.Services.Product do
   def delete(product) do
     Catalog.delete_product(product)
     Cache.delete("products")
-    IndexProduct.product_index.delete_product_by_index(product)
+    IndexProduct.delete_product(product)
   end
 end
