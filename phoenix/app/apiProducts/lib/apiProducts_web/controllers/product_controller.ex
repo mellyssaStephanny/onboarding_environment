@@ -1,6 +1,7 @@
 defmodule ApiProductsWeb.ProductController do
   use ApiProductsWeb, :controller
 
+  alias ApiProducts.Cache
   alias ApiProducts.Catalog
   alias ApiProducts.Catalog.Product
   alias ApiProductsWeb.Services.Product
