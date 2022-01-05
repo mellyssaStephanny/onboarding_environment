@@ -6,15 +6,13 @@ defmodule ApiProductsWeb.Plugs.PlugCacheId do
   def init(props) do
     props 
   end
-
-  def call(conn, _params) do 
-    get_product(conn)
-  end 
-
+  
+  # plug for cahe redis 
   def get_cache(id) do
+    id = conn.params["id"]
     case Cache.get(id) do 
       {:ok, _} = result ->
-        resulkt 
+        result 
       _-> 
       product = Catalog.get_product(id)
       if product do 
