@@ -9,12 +9,12 @@ defmodule ApiProductsWeb.Services.Product do
     {:ok, products}
   end
 
-  def create(%{"product" => product}) when is_map(product) do
+  def create(product) when is_map(product) do
     case Catalog.create_product(product) do
-      {:ok, _} = result ->
-        Cache.delete("product")
-        IndexProduct.product_index(result)
-        result
+      {:ok, _} = product ->
+        Cache.set(product.id, result)
+        IndexProduct.product_index(product)
+        product
       error -> error
     end
   end
