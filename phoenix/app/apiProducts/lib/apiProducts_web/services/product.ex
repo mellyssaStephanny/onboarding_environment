@@ -30,8 +30,9 @@ defmodule ApiProductsWeb.Services.Product do
   end
 
   def delete(product) do
-    Catalog.delete_product(product)
-    Cache.delete("products")
-    IndexProduct.delete_product(product)
+    case Catalog.delete_product(product) do 
+      Cache.delete(product.id)
+      IndexProduct.delete_product(product)
+    end
   end
 end
