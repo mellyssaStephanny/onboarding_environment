@@ -23,4 +23,14 @@ defmodule ApiProducts.IndexProduct do
     delete("/apiProducts/products/#{product.id}")
   end
 
+  def search_product(params) do
+    query = Enum.map_join(params, "*&", fn {k, v} -> "#{k}:#{v}" end)
+    "apiProducts/products/_search#{if query != "", do: "?q="}#{query}"
+    |> get()
+    |> format_response()
+  end
+
+  defp format_response(any), do: {:error, any}
+
+  defp format_response({:ok, 200}), do: {:ok, []}
 end
