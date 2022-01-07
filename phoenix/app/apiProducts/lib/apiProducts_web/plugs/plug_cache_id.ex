@@ -7,22 +7,15 @@ defmodule ApiProductsWeb.Plugs.PlugCacheId do
     props 
   end
   
-  # plug for cahe redis 
-  def get_cache(id) do
-    id = conn.params["id"]
-    case Cache.get(id) do 
-      {:ok, _} = result ->
-        result 
-      _-> 
-      product = Catalog.get_product(id)
-      if product do 
-        Cache.set(id, product)
-        {:ok, product}
-      else 
+  # plug for cache redis 
+  def get_cache(conn, id) do
+    case Catalog.get_product(id) 
+      nil ->
         conn 
-        |> put_status(:not_found)
-        |> render(:"404")
-        |> halt()
-      end 
+        |> Plug.Conn.halt()
+        |> send_resp(:not_found, "")
+      product -> 
+        assing(conn, :product, product)
     end 
   end 
+end 
