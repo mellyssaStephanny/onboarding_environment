@@ -1,8 +1,9 @@
 defmodule ApiProducts.IndexProduct do
 
   import Tirexs.HTTP
+  alias ApiProducts.Catalog
 
-  def product_index({:ok, product}) do
+  def product_index(product) do
     product_json =
        %{
         id: product.id,
@@ -13,11 +14,9 @@ defmodule ApiProducts.IndexProduct do
         price: product.price
         date: DateTime.to_iso8601(DateTime.utc_now())
       }
-  end
 
-  def products(product) do 
     put("/apiProducts/products/#{product_json.id}", product_json)
-  end 
+  end
 
   def delete_product(product) do
     delete("/apiProducts/products/#{product.id}")

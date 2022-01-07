@@ -11,7 +11,7 @@ defmodule ApiProductsWeb.ProductController do
   action_fallback ApiProductsWeb.FallbackController
 
   def index(conn, _params) do
-    case Product.fetch_all() do
+    case Product.fetch_all(conn.params) do
       {:ok, products} -> render(conn, "index.json", product: products)
       error -> error
   end
