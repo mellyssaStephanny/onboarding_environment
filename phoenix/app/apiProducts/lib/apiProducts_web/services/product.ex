@@ -4,10 +4,12 @@ defmodule ApiProductsWeb.Services.Product do
   alias ApiProducts.Catalog
   alias ApiProducts.IndexProduct 
 
-  def fetch_all(params) do 
-    case IndexProduct.search_product(params) do 
-      {:ok, products} -> products
-      {:error, _} -> Catalog.list_products()
+  def fetch_all(params) do
+    ProductIndex.search_product(product)
+    case ProductIndex.search_product(product) do 
+      {:elsk, products} -> products
+      {:mongodb, products} -> products
+      error -> error
     end
   end
 
@@ -39,6 +41,5 @@ defmodule ApiProductsWeb.Services.Product do
         {:ok, :no_content}
       error -> error
     end
-  end 
-  
+  end  
 end
