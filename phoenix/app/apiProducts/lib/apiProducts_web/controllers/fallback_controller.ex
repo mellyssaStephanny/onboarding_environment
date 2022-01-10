@@ -8,8 +8,7 @@ defmodule ApiProductsWeb.FallbackController do
   alias ApiProducts.Catalog.Product
   
   def call(conn, {:ok, %Product{} = product}) do 
-    render(conn, "show.jso
-    n", product: product)
+    render(conn, "show.json", product: product)
   end 
 
   def call(conn, {:ok, :no_content}) do 

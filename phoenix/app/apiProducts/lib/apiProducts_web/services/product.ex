@@ -4,8 +4,11 @@ defmodule ApiProductsWeb.Services.Product do
   alias ApiProducts.Catalog
   alias ApiProducts.IndexProduct 
 
-  def fetch_all(params) do
-    IndexProduct.search_product(params)
+  def fetch_all(params) do 
+    case IndexProduct.search_product(params) do 
+      {:ok, products} -> products
+      {:error, _} -> Catalog.list_products()
+    end
   end
 
   def create(product) when is_map(product) do
@@ -18,10 +21,7 @@ defmodule ApiProductsWeb.Services.Product do
     end
   end
 
-  def create(_params), do: {:error, %{code: 422, message: "Unable to create product"}}
-
   def update(product, product_params) do
-    IO.inspect(product)
     case Catalog.update_product(product, product_params) do
       {:ok, _} = update_product ->
         Cache.set(product.id, product)
@@ -30,14 +30,6 @@ defmodule ApiProductsWeb.Services.Product do
       error -> error
     end
   end
-
-  def update(_product, _params), do: {:error, %{code: 422, message: "Unable to update product"}}   
-
-  def show(product) do 
-    product 
-  end
-
-  def show(), do {:error, %{code:422, message: "Could not show product"}}
 
   def delete(product) do
     case Catalog.delete_product(product) do 
@@ -48,7 +40,5 @@ defmodule ApiProductsWeb.Services.Product do
       error -> error
     end
   end 
-
-  def delete(), do {:error, %{code: 422, message: "Unable to delete the product"}
-
+  
 end
