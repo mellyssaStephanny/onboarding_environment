@@ -1,4 +1,4 @@
-defmodule ApiProductsWeb.Services.Product do 
+defmodule ApiProductsWeb.Services.Product do
   
   alias ApiProducts.Cache 
   alias ApiProducts.Catalog
@@ -21,7 +21,7 @@ defmodule ApiProductsWeb.Services.Product do
   def create(_params), do: {:error, %{code: 422, message: "Unable to create product"}}
 
   def update(product, product_params) do
-    IO.insert(product)
+    IO.inspect(product)
     case Catalog.update_product(product, product_params) do
       {:ok, _} = update_product ->
         Cache.set(product.id, product)

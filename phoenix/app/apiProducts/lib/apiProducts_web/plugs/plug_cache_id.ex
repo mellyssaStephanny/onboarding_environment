@@ -1,8 +1,8 @@
 defmodule ApiProductsWeb.Plugs.PlugCacheId do 
 
   import Plug.Conn
+  alias ApiProducts.Cache
   alias ApiProducts.Catalog
-  alias ApiProducts.Catalog.Product
 
   def init(props) do
     props 

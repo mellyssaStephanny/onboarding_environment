@@ -7,6 +7,7 @@ defmodule ApiProductsWeb.ProductController do
   alias ApiProductsWeb.Services.Product
   
   plug ApiProductsWeb.Plugs.PlugCacheId when action in [:show, :update, :delete]
+  plug ApiProductsWeb.Plugs.PlugShowProduct when action in [:create, :update]
 
   action_fallback ApiProductsWeb.FallbackController
 
@@ -16,15 +17,15 @@ defmodule ApiProductsWeb.ProductController do
       error -> error
   end
 
-  def create(_conn, product_params) do
-    Product.create(product_params)
+  def create(conn, _) do
+    Product.create(conn.assigns[:product_params])
   end
 
-  def show(conn, _params) do
-    Product.show(conn.assigns[:product])
+  def show(conn, _) do
+    conn.assigns[:product]
   end
     
-  def update(conn, _params) do
+  def update(conn, _) do
     Product.update(conn.assigns[:product], params)
   end
 
