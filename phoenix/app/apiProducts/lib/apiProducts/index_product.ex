@@ -35,6 +35,4 @@ defmodule ApiProducts.IndexProduct do
 
   defp format_response_id({:ok, 200, %{:hits => %{:hits => hist_list}}}),
     do: Enum.map(hist_list, & &1[:_id])
-  end
-
 end
