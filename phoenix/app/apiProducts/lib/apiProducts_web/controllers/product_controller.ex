@@ -16,7 +16,7 @@ defmodule ApiProductsWeb.ProductController do
       error -> error
   end
 
-  def create(conn, product_params) do
+  def create(_conn, product_params) do
     Product.create(product_params)
   end
 
@@ -30,4 +30,5 @@ defmodule ApiProductsWeb.ProductController do
 
   def delete(conn, _params) do
     Product.delete(conn.assigns[:product])
+    {:ok, :no_content}
 end

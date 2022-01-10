@@ -5,7 +5,16 @@ defmodule ApiProductsWeb.FallbackController do
   See `Phoenix.Controller.action_fallback/1` for more details.
   """
   use ApiProductsWeb, :controller
+  alias ApiProducts.Catalog.Product
   
+  def call(conn, {:ok, %Product{} = product}) do 
+    render(conn, "show.jso
+    n", product: product)
+  end 
+
+  def call(conn, {:ok, :no_content}) do 
+    render(conn, :no_content, "")
+  end 
 
   # This clause handles errors returned by Ecto's insert/update/delete.
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
