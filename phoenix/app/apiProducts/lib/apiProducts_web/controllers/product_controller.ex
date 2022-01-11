@@ -3,7 +3,6 @@ defmodule ApiProductsWeb.ProductController do
 
   alias ApiProducts.Cache
   alias ApiProducts.Catalog
-  alias ApiProducts.Catalog.Product
   alias ApiProductsWeb.Services.Product
   
   plug ApiProductsWeb.Plugs.PlugCacheId when action in [:show, :update, :delete]
