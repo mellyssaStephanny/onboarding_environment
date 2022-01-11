@@ -1,6 +1,6 @@
 defmodule ApiProductsWeb.Plugs.PlugCacheId do 
-
   import Plug.Conn
+
   alias ApiProducts.Cache
   alias ApiProducts.Catalog
 
@@ -13,7 +13,7 @@ defmodule ApiProductsWeb.Plugs.PlugCacheId do
     case Catalog.get_product(id) 
       nil ->
         conn 
-        |> Plug.Conn.halt()
+        |> halt()
         |> send_resp(:not_found, "")
       product -> 
         assing(conn, :product, product)
