@@ -5,16 +5,13 @@ defmodule ApiProductsWeb.Services.Product do
   alias ApiProducts.IndexProduct 
 
   def fetch_all(params) do
-    ProductIndex.search_product(product)
-    case ProductIndex.search_product(product) do 
-      {:elsk, products} -> products
-      {:mongodb, products} -> products
-      error -> error
+    case IndexProduct.search_product(product) do
+      {:ok, products} -> products
     end
   end
 
   def create(product) when is_map(product) do
-    case Catalog.product_index(product) do
+    case IndexProduct.product_index(product) do
       {:ok, product} ->
         Cache.set(product.id, product)
         IndexProduct.product_index(product)

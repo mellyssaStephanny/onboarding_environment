@@ -1,7 +1,6 @@
 defmodule ApiProducts.IndexProduct do
 
   import Tirexs.HTTP
-  alias ApiProducts.Catalog
 
   def product_index(product) do
     product_json =
@@ -11,7 +10,7 @@ defmodule ApiProducts.IndexProduct do
         sku: product.sku,
         description: product.description,
         qtd: product.qtd,
-        price: product.price
+        price: product.price,
         date: DateTime.to_iso8601(DateTime.utc_now())
       }
 
@@ -29,7 +28,7 @@ defmodule ApiProducts.IndexProduct do
     |> format_response()
   end
 
-  defp format_response(any), do: {:error, any}
+  defp format_response(error), do: {:error, error}
 
   defp format_response({:ok, 200}), do: {:ok, []}
 end
