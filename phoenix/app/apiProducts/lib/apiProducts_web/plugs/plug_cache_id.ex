@@ -9,7 +9,7 @@ defmodule ApiProductsWeb.Plugs.PlugCacheId do
   end
   
   # plug for cache redis 
-  def get_cache(conn, id) do
+  def get_cache(conn, _id) do
     id = conn.params["id"]
     case Cache.get(id) do
       {:ok, product} ->

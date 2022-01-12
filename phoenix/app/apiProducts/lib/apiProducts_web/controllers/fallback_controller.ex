@@ -15,7 +15,7 @@ defmodule ApiProductsWeb.FallbackController do
     render(conn, :no_content, "")
   end 
 
-  def call (conn, {:error, _any}) do
+  def call(conn, {:error, _any}) do
     render(conn, :bad_request, "")
   end
 

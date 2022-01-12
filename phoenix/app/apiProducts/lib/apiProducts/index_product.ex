@@ -22,7 +22,7 @@ defmodule ApiProducts.IndexProduct do
   end
 
   def search_product(params) do
-    query = Enum.map_join(params, "*&", fn {k, v} -> "#{k}:#{v}" end)
+    query = Enum.map_join(params, "*&", fn{k, v} -> "#{k}:#{v}" end)
     "apiProducts/products/_search#{if query != "", do: "?q="}#{query}"
     |> get()
     |> format_response()
