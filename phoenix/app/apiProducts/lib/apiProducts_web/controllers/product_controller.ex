@@ -14,6 +14,7 @@ defmodule ApiProductsWeb.ProductController do
     case Product.fetch_all(conn.params) do
       {:ok, products} -> render(conn, "index.json", product: products)
       error -> error
+    end
   end
 
   def create(conn, _) do
@@ -31,4 +32,5 @@ defmodule ApiProductsWeb.ProductController do
   def delete(conn, _params) do
     Product.delete(conn.assigns[:product])
     {:ok, :no_content}
+  end
 end

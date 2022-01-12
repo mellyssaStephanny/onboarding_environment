@@ -22,5 +22,4 @@ defmodule ApiProducts.Cache do
   end
 
   defp decode({:ok, nil}), do: {:error, "Key not found"}
-  
 end

@@ -30,3 +30,4 @@ defmodule ApiProductsWeb.FallbackController do
     |> render(:"404")
     |> halt()
   end
+end
