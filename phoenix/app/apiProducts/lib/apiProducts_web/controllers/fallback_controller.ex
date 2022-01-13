@@ -9,15 +9,14 @@ defmodule ApiProductsWeb.FallbackController do
   
   def call(conn, {:ok, %Product{} = product}) do 
     render(conn, "show.json", product: product)
-  end 
+  end
 
-  def call(conn, {conn, :no_content}) do 
+  def call(conn, %Product{} = product) do
+    render(conn, "show.json", product: product)
+
+  def call(conn, {:ok, :no_content}) do 
     render(conn, :no_content, "")
   end 
-
-  def call(conn, {:error, _any}) do
-    render(conn, :bad_request, "")
-  end
 
   # This clause handles errors returned by Ecto's insert/update/delete.
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
@@ -25,6 +24,10 @@ defmodule ApiProductsWeb.FallbackController do
     |> put_status(:unprocessable_entity)
     |> put_view(ApiProductsWeb.ChangesetView)
     |> render("error.json", changeset: changeset)
+  end
+
+  def call(conn, {:error, _any}) do
+    render(conn, :bad_request, "")
   end
 
   def call(conn, {:error, :not_found}) do
