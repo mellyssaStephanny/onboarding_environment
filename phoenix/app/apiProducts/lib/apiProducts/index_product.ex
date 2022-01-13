@@ -2,7 +2,7 @@ defmodule ApiProducts.IndexProduct do
 
   import Tirexs.HTTP
 
-  def product_index(product) do
+  def update_product(product) do
     product_json =
        %{
         id: product.id,
@@ -22,13 +22,13 @@ defmodule ApiProducts.IndexProduct do
   end
 
   def search_product(params) do
-    query = Enum.map_join(params, "*&", fn{k, v} -> "#{k}:#{v}" end)
+    query = Enum.map_join(params, "%20AND%20", fn{k, v} -> "#{k}:#{v}" end)
     "apiProducts/products/_search#{if query != "", do: "?q="}#{query}"
     |> get()
     |> format_response()
   end
 
-  defp format_response(error), do: {:error, error}
-
   defp format_response({:ok, 200}), do: {:ok, []}
+
+  defp format_response(error), do: {:error, error}
 end
