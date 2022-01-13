@@ -5,7 +5,7 @@ defmodule ApiProductsWeb.Services.Product do
   alias ApiProducts.IndexProduct 
 
   def fetch_all(product) do
-    case IndexProduct.update_product(product) do
+    case IndexProduct.search_product(product) do
       {:ok, products} -> products
       {:error, _} -> Catalog.list_products()
     end
@@ -15,7 +15,7 @@ defmodule ApiProductsWeb.Services.Product do
     case Catalog.create_product(product) do
       {:ok, product} ->
         Cache.set(product.id, product)
-        IndexProduct.create_product(product)
+        IndexProduct.update_product(product)
         product
       error -> error
     end
