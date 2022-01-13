@@ -26,15 +26,15 @@ defmodule ApiProductsWeb.FallbackController do
     |> render("error.json", changeset: changeset)
   end
 
-  def call(conn, {:error, _any}) do
-    render(conn, :bad_request, "")
-  end
-
   def call(conn, {:error, :not_found}) do
     conn 
     |> put_status(:not_found)
     |> put_view(ApiProductsWeb.ErrorView)
     |> render(:"404")
     |> halt()
+  end
+
+  def call(conn, {:error, _any}) do
+    render(conn, :bad_request, "")
   end
 end
