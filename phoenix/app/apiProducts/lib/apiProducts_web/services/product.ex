@@ -12,10 +12,10 @@ defmodule ApiProductsWeb.Services.Product do
   end
 
   def create(product) when is_map(product) do
-    case IndexProduct.update_product(product) do
+    case Catalog.create_product(product) do
       {:ok, product} ->
         Cache.set(product.id, product)
-        IndexProduct.update_product(product)
+        IndexProduct.create_product(product)
         product
       error -> error
     end
