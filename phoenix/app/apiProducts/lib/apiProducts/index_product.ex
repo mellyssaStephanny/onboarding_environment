@@ -2,7 +2,7 @@ defmodule ApiProducts.IndexProduct do
 
   import Tirexs.HTTP
 
-  def update_product(product) do
+  def create_product(product) do
     product_json =
        %{
         id: product.id,

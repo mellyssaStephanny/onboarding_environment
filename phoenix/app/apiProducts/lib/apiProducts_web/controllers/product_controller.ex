@@ -1,17 +1,18 @@
 defmodule ApiProductsWeb.ProductController do
   use ApiProductsWeb, :controller
 
+  alias ApiProductsWeb.Catalog.Product
   alias ApiProductsWeb.Services.Product
-  
-  plug ApiProductsWeb.Plugs.PlugCacheId when action in [:show, :update, :delete]
 
   action_fallback ApiProductsWeb.FallbackController
+  
+  plug ApiProductsWeb.Plugs.PlugCacheId when action in [:show, :update, :delete]
 
   def index(conn, _params) do
     Product.fetch_all(conn.params)
   end
 
-  def create(conn, _) do
+  def create(conn, product_params) do
     Product.create(conn.assigns[:product_params])
   end
 

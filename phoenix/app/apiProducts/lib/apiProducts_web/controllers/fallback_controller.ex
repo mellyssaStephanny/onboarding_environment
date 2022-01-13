@@ -13,6 +13,7 @@ defmodule ApiProductsWeb.FallbackController do
 
   def call(conn, %Product{} = product) do
     render(conn, "show.json", product: product)
+  end
 
   def call(conn, {:ok, :no_content}) do 
     render(conn, :no_content, "")
