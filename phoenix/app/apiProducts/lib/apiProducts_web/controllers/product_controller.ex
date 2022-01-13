@@ -26,5 +26,6 @@ defmodule ApiProductsWeb.ProductController do
   def delete(conn, _params) do
     Product.delete(conn.assigns[:product])
     {:ok, :no_content}
+    {:error, error}
   end
 end
