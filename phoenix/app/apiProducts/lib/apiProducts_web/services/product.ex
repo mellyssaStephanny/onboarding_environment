@@ -11,7 +11,7 @@ defmodule ApiProductsWeb.Services.Product do
     end
   end
 
-  def create(product) when is_map(product) do
+  def create(product) do
     case Catalog.create_product(product) do
       {:ok, product} ->
         Cache.set(product.id, product)
