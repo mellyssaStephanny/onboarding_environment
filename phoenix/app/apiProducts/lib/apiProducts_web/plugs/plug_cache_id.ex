@@ -23,7 +23,7 @@ defmodule ApiProductsWeb.Plugs.PlugCacheId do
           |> halt()
           |> send_resp(:not_found, "")
           
-        product ->
+        _ ->
           Cache.set(product.id, product)
           assign(conn, :product, product)
       end
