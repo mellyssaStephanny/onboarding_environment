@@ -12,7 +12,7 @@ defmodule ApiProductsWeb.ProductController do
     Product.fetch_all(conn.assigns[:product_params])
   end
 
-  def create(conn, product_params) do
+  def create(conn, "product" => product_params) do
     Product.create(conn.assigns[:product_params])
   end
 
