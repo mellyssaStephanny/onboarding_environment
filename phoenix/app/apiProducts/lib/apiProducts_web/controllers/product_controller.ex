@@ -8,7 +8,7 @@ defmodule ApiProductsWeb.ProductController do
   
   plug ApiProductsWeb.Plugs.PlugCacheId when action in [:show, :update, :delete]
 
-  def index(conn, _params) do
+  def index(conn, "product" => product_params) do
     Product.fetch_all(conn.assigns[:product_params])
   end
 
