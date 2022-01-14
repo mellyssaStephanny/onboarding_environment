@@ -11,7 +11,7 @@ defmodule ApiProductsWeb.FallbackController do
     render(conn, "show.json", product: product)
   end
 
-  def call(conn, {%Product{} = product}) do
+  def call(conn, product) do
     render(conn, "show.json", product: product)
   end
 
