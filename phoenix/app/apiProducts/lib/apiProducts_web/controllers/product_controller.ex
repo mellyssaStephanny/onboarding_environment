@@ -11,6 +11,7 @@ defmodule ApiProductsWeb.ProductController do
   def index(conn, _params) do
     case Product.fetch_all(product) do
       render(conn, "index.json", product: product)
+    end
   end
 
   def create(conn, %{"product" => product_params}) do
