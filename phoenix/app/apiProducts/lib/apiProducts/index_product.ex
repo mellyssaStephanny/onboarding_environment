@@ -30,5 +30,7 @@ defmodule ApiProducts.IndexProduct do
 
   defp format_response({:ok, 200}), do: {:ok, []}
 
+  defp format_response({:ok, error}), do: {:ok, error}
+
   defp format_response(error), do: {:error, error}
 end
