@@ -11,7 +11,7 @@ defmodule ApiProductsWeb.FallbackController do
     render(conn, "show.json", product: product)
   end
 
-  def call(conn, product) do
+  def call(conn, %Product{} = product) do
     render(conn, "show.json", product: product)
   end
 
@@ -35,7 +35,9 @@ defmodule ApiProductsWeb.FallbackController do
     |> halt()
   end
 
-  def call(conn, {:error, _any}) do
-    render(conn, :bad_request, "")
+  def call(conn, {:error, message}) do
+    conn 
+    |> put_status(:bad_request)
+    |> json(%{error: message})
   end
 end
