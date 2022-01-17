@@ -7,6 +7,8 @@ defmodule ApiProducts.Application do
 
   def start(_type, _args) do
     children = [
+      # Add connect to Redis
+      {Redix, host: "localhost", name: :redis_server},
       # Start the Ecto repository
       ApiProducts.Repo,
       # Start the Telemetry supervisor
