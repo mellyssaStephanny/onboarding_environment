@@ -14,23 +14,21 @@ defmodule ApiProducts.IndexProduct do
         date: DateTime.to_iso8601(DateTime.utc_now())
       }
 
-    put("/apiProducts/products/#{product_json.id}", product_json)
+    put("/api-products/products/#{product_json.id}", product_json)
   end
 
   def delete_product(product) do
-    delete("/apiProducts/products/#{product.id}")
+    delete("/api-products/products/#{product.id}")
   end
 
   def search_product(params) do
-    query = Enum.map_join(params, "%20AND%20", fn{k, v} -> "#{k}:#{v}" end)
-    "apiProducts/products/_search#{if query != "", do: "?q="}#{query}"
+    query = Enum.map_join(params, "%20AND%20", fn {k, v} -> "#{k}:#{v}" end)
+    "api-products/products/_search#{if query != "", do: "?q="}#{query}"
     |> get()
     |> format_response()
   end
 
-  defp format_response({:ok, 200}), do: {:ok, []}
-
-  defp format_response({:ok, error}), do: {:ok, error}
-
-  defp format_response(error), do: {:error, error}
+  defp format_response({:ok, 200, %{hits: %{hits: hits}}}), do: {:ok, hits}
+  
+  defp format_response({:ok, result}), do: {:ok, result}
 end
