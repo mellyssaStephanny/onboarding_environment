@@ -9,7 +9,7 @@ defmodule ApiProductsWeb.ProductController do
   plug ApiProductsWeb.Plugs.PlugCacheId when action in [:show, :update, :delete]
 
   def index(conn, params) do
-    products = Product.fetch_all(params) do
+    products = Product.fetch_all(params)
     render(conn, "index.json", products: products)
     end
   end
@@ -22,7 +22,8 @@ defmodule ApiProductsWeb.ProductController do
   end
 
   def create(conn, _params) do 
-    {:error, "Could not create product"}
+    {:error, "Product key required"}
+  end
 
   def show(conn, _) do
     conn.assigns[:product]
