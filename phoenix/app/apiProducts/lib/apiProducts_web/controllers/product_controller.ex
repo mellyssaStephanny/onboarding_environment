@@ -1,45 +1,42 @@
 defmodule ApiProductsWeb.ProductController do
   use ApiProductsWeb, :controller
 
-  alias ApiProducts.Catalog
-  alias ApiProducts.Catalog.Product
+  alias ApiProducts.Catalog.Product, as: CatalogProduct
   alias ApiProductsWeb.Services.Product
-  
-  plug ApiProductsWeb.Plugs.PlugId when action in [:show, :update, :delete]
 
   action_fallback ApiProductsWeb.FallbackController
+  
+  plug ApiProductsWeb.Plugs.PlugCacheId when action in [:show, :update, :delete]
 
-  def index(conn, _params) do
-    case Product.fetch_all() do
-      {:ok, products} -> render(conn, "index.json", product: products)}
-      error -> error
+  def index(conn, params) do
+    products = Product.fetch_all(params)
+    render(conn, "index.json", products: products)
   end
 
   def create(conn, %{"product" => product_params}) do
-    case Catalog.create_product(product_params) do
-      {:ok, %Product{} = product} ->
-        conn
-        |> put_status(:created)
-        |> render("show.json", product: product)
+    case Product.create(product_params) do   
+      {:ok, %CatalogProduct{} = product} -> product  
       error -> error
     end
   end
 
-  def show(conn, _params) do
-    render(conn, "show.json", product: conn.assigns[:product])
+  def create(conn, _params) do 
+    {:error, "Product key required"}
+  end
+
+  def show(conn, _) do
+    conn.assigns[:product]
   end
     
   def update(conn, %{"product" => product_params}) do
-    with {:ok, %Product{} = product} <- conn.assigns[:product],
-    {:ok, %Product{} = update_product} <- Catalog.update_product(product, product_params) do 
-      render(conn, "show.json", product: update_product)
-    end 
+    Product.update(conn.assigns[:product], product_params)
   end
 
-  def delete(conn, _id) do
-    with {:ok, %Product{} = product} <- conn.assigns[:product],
-    {:ok, %Product{}} <- Catalog.delete_product(product) do 
-      send_resp(conn, :no_content, "")
-    end
+  def update(conn, params) do 
+    {:error, "Could not update product"}
+  end
+
+  def delete(conn, %{"id" => _id}) do
+    Product.delete(conn.assigns[:product])
   end
 end

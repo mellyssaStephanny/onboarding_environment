@@ -3,7 +3,9 @@ defmodule ApiProductsWeb.Plugs.PlugId do
 
   alias ApiProducts.Catalog
 
-  def init(opts), do: opts
+  def init(props) do
+    props
+  end 
   
   # plug for find product by id
   def call(conn, _opts) do
