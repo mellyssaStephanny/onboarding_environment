@@ -40,6 +40,7 @@ defmodule ApiProductsWeb.Services.Product do
       {:ok, _} ->
         Cache.delete(product.id)
         IndexProduct.delete_product(product)
+        
         {:ok, :no_content}
         
       error -> error
