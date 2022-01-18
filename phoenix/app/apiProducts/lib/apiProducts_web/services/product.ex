@@ -1,5 +1,5 @@
 defmodule ApiProductsWeb.Services.Product do
-  
+
   alias ApiProducts.Cache 
   alias ApiProducts.Catalog
   alias ApiProducts.IndexProduct 
@@ -41,6 +41,7 @@ defmodule ApiProductsWeb.Services.Product do
         Cache.delete(product.id)
         IndexProduct.delete_product(product)
         {:ok, :no_content}
+        
       error -> error
     end
   end  

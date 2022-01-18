@@ -23,6 +23,7 @@ defmodule ApiProducts.IndexProduct do
 
   def search_product(params) do
     query = Enum.map_join(params, "%20AND%20", fn {k, v} -> "#{k}:#{v}" end)
+
     "api-products/products/_search#{if query != "", do: "?q="}#{query}"
     |> get()
     |> format_response()
@@ -30,5 +31,5 @@ defmodule ApiProducts.IndexProduct do
 
   defp format_response({:ok, 200, %{hits: %{hits: hits}}}), do: {:ok, hits}
   
-  defp format_response({:ok, result}), do: {:ok, result}
+  defp format_response({:ok, 404, _result}), do: {:error, "Not found"}
 end
