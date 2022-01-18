@@ -16,7 +16,7 @@ defmodule ApiProductsWeb.FallbackController do
   end
 
   def call(conn, {:ok, :no_content}) do 
-    render(conn, :no_content, "")
+    send_resp(conn, :no_content, "")
   end 
 
   # This clause handles errors returned by Ecto's insert/update/delete.
