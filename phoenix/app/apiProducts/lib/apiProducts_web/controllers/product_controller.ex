@@ -11,7 +11,6 @@ defmodule ApiProductsWeb.ProductController do
   def index(conn, params) do
     products = Product.fetch_all(params)
     render(conn, "index.json", products: products)
-    end
   end
 
   def create(conn, %{"product" => product_params}) do
@@ -37,7 +36,7 @@ defmodule ApiProductsWeb.ProductController do
     {:error, "Could not update product"}
   end
 
-  def delete(conn, "id" => _id) do
+  def delete(conn, %{"id" => _id}) do
     Product.delete(conn.assigns[:product])
   end
 end
