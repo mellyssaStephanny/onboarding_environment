@@ -11,6 +11,7 @@ defmodule ApiProducts.IndexProduct do
         description: product.description,
         qtd: product.qtd,
         price: product.price,
+        barcode: product.barcode,
         date: DateTime.to_iso8601(DateTime.utc_now())
       }
 

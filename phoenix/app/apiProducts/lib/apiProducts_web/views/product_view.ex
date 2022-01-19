@@ -16,6 +16,7 @@ defmodule ApiProductsWeb.ProductView do
       sku: product.sku,
       description: product.description,
       qtd: product.qtd,
+      barcode: product.barcode,
       price: product.price}
   end
 end
