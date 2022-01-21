@@ -44,6 +44,7 @@ defmodule ApiProducts.MixProject do
       {:redis, "~> 0.1"},
       {:redix, "~> 1.1"},
       {:exredis, ">= 0.2.4"},
+      {:mock, "~> 0.3.0", only: :test},
       {:tirexs, "~> 0.8"}
     ]
   end
@@ -59,7 +60,7 @@ defmodule ApiProducts.MixProject do
       setup: ["deps.get", "ecto.setup"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
+      test: ["ecto.create --quiet", "test"]
     ]
   end
 end
