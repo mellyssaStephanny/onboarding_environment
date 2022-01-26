@@ -30,7 +30,7 @@ defmodule ApiProducts.IndexProduct do
     |> format_response()
   end
 
-  defp format_response({:ok, 200, %{hits: %{hits: hits}}}), 
+  defp format_response({:ok, 200, %{hits: %{hits: hits}}}),
     do: {:ok, Enum.map(hits, & &1._source)}
 
   defp format_response({:error, 404, _result}), do: {:error, "Not found"}

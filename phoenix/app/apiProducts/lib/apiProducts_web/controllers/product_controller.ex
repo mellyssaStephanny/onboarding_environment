@@ -5,7 +5,7 @@ defmodule ApiProductsWeb.ProductController do
   alias ApiProductsWeb.Services.Product
 
   action_fallback ApiProductsWeb.FallbackController
-  
+
   plug ApiProductsWeb.Plugs.PlugCacheId when action in [:show, :update, :delete]
 
   def index(conn, params) do
@@ -13,26 +13,26 @@ defmodule ApiProductsWeb.ProductController do
     render(conn, "index.json", products: products)
   end
 
-  def create(conn, %{"product" => product_params}) do
-    case Product.create(product_params) do   
-      {:ok, %CatalogProduct{} = product} -> product  
+  def create(_conn, %{"product" => product_params}) do
+    case Product.create(product_params) do
+      {:ok, %CatalogProduct{} = product} -> product
       error -> error
     end
   end
 
-  def create(conn, _params) do 
+  def create(_conn, _params) do
     {:error, "Product key required"}
   end
 
   def show(conn, _) do
     conn.assigns[:product]
   end
-    
+
   def update(conn, %{"product" => product_params}) do
     Product.update(conn.assigns[:product], product_params)
   end
 
-  def update(conn, params) do 
+  def update(_conn, _params) do
     {:error, "Could not update product"}
   end
 
