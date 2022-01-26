@@ -3,15 +3,15 @@ defmodule ApiProducts.Catalog.Product do
   import Ecto.Changeset
 
   @primary_key {:id, :binary_id, autogenerate: true}
-  
+
   schema "products" do
     field :sku,         :string
     field :name,        :string
-    field :description, :string
-    field :qtd,         :integer  
+    field :qtd,         :integer
     field :price,       :float
-    field :barcode      :integer
-    
+    field :barcode,     :integer
+    field :description, :string
+
     timestamps()
   end
 
