@@ -51,4 +51,12 @@ defmodule ApiProducts.Catalog do
   def delete_product(%Product{} = product) do
     Repo.delete(product)
   end
+
+  @doc """
+  Change product.
+  """
+
+  def change_product(%Product{} = product, attrs \\ %{}) do
+    Product.changeset(product, attrs)
+  end
 end
