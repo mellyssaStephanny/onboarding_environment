@@ -1,5 +1,5 @@
 defmodule ApiProducts.CatalogTest do
-  use ApiProducts.DataCase, async: false
+  use ApiProducts.DataCase
 
   alias ApiProducts.Catalog
 
