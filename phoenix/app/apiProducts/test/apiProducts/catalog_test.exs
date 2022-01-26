@@ -1,5 +1,5 @@
 defmodule ApiProducts.CatalogTest do
-  use ApiProducts.DataCase
+  use ApiProducts.DataCase, async: false
 
   alias ApiProducts.Catalog
 
@@ -35,7 +35,7 @@ defmodule ApiProducts.CatalogTest do
       assert product.description == "some description"
       assert product.name == "some name"
       assert product.price == 120.5
-      assert product.sku == "some sku"
+      assert product.sku == "some-sku"
       assert product.barcode == "1234567890"
     end
 
@@ -50,7 +50,7 @@ defmodule ApiProducts.CatalogTest do
       assert product.description == "some updated description"
       assert product.name == "some updated name"
       assert product.price == 456.7
-      assert product.sku == "some updated sku"
+      assert product.sku == "some-updated-sku"
       assert product.barcode == "1234567890"
     end
 
@@ -63,7 +63,7 @@ defmodule ApiProducts.CatalogTest do
     test "delete_product/1 deletes the product" do
       product = product_fixture()
       assert {:ok, %Product{}} = Catalog.delete_product(product)
-      assert_raise Ecto.NoResultsError, fn -> Catalog.get_product!(product.id) end
+      assert product = Catalog.get_product!(product.id)
     end
 
     test "change_product/1 returns a product changeset" do
