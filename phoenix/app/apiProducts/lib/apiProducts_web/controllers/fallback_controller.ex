@@ -6,8 +6,8 @@ defmodule ApiProductsWeb.FallbackController do
   """
   use ApiProductsWeb, :controller
   alias ApiProducts.Catalog.Product
-  
-  def call(conn, {:ok, %Product{} = product}) do 
+
+  def call(conn, {:ok, %Product{} = product}) do
     render(conn, "show.json", product: product)
   end
 
@@ -15,9 +15,13 @@ defmodule ApiProductsWeb.FallbackController do
     render(conn, "show.json", product: product)
   end
 
-  def call(conn, {:ok, :no_content}) do 
+  def call(conn, {:ok, :no_content}) do
     send_resp(conn, :no_content, "")
-  end 
+  end
+
+  def call(conn, {:ok, :created}) do
+    send_resp(conn, :201, ":created")
+  end
 
   # This clause handles errors returned by Ecto's insert/update/delete.
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
@@ -28,7 +32,7 @@ defmodule ApiProductsWeb.FallbackController do
   end
 
   def call(conn, {:error, :not_found}) do
-    conn 
+    conn
     |> put_status(:not_found)
     |> put_view(ApiProductsWeb.ErrorView)
     |> render(:"404")
@@ -36,7 +40,7 @@ defmodule ApiProductsWeb.FallbackController do
   end
 
   def call(conn, {:error, message}) do
-    conn 
+    conn
     |> put_status(:bad_request)
     |> json(%{error: message})
   end
