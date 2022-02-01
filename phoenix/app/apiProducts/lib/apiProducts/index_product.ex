@@ -2,24 +2,29 @@ defmodule ApiProducts.IndexProduct do
 
   import Tirexs.HTTP
 
-  def update_product(product) do
-    product_json =
-       %{
-        id: product.id,
-        name: product.name,
-        sku: product.sku,
-        description: product.description,
-        qtd: product.qtd,
-        price: product.price,
-        barcode: product.barcode,
-        date: DateTime.to_iso8601(DateTime.utc_now())
-      }
+  def create_product(product) do
+    put("api-products/products/#{product.id}", format_json(product))
+  end
 
-    put("/api-products/products/#{product_json.id}", product_json)
+  defp format_json(product) do
+    %{
+      id: product.id,
+      sku: product.sku,
+      qtd: product.qtd,
+      name: product.name,
+      price: product.price,
+      barcode: product.barcode,
+      description: product.description,
+      date: DateTime.to_iso8601(DateTime.utc_now())
+    }
   end
 
   def delete_product(product) do
     delete("/api-products/products/#{product.id}")
+  end
+
+  def update_product(product) do
+    put("api-products/products/#{product.id}", format_json(product))
   end
 
   def search_product(params) do
