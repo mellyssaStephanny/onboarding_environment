@@ -1,8 +1,8 @@
 defmodule ApiProductsWeb.Services.Product do
 
-  alias ApiProducts.Cache 
+  alias ApiProducts.Cache
   alias ApiProducts.Catalog
-  alias ApiProducts.IndexProduct 
+  alias ApiProducts.IndexProduct
 
   def fetch_all(params) do
     case IndexProduct.search_product(params) do
@@ -36,14 +36,14 @@ defmodule ApiProductsWeb.Services.Product do
   end
 
   def delete(product) do
-    case Catalog.delete_product(product) do 
+    case Catalog.delete_product(product) do
       {:ok, _} ->
         Cache.delete(product.id)
         IndexProduct.delete_product(product)
-        
+
         {:ok, :no_content}
-        
+
       error -> error
     end
-  end  
+  end
 end

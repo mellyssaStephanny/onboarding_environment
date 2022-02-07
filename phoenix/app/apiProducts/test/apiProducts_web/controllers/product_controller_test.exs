@@ -1,8 +1,10 @@
 defmodule ApiProductsWeb.ProductControllerTest do
-  use ApiProductsWeb.ConnCase
+  use ApiProductsWeb.ConnCase, async: true
 
+  import Mock
   alias ApiProducts.Catalog
   alias ApiProducts.Catalog.Product
+  alias ApiProducts.Catalog.IndexProduct
 
   @create_attrs %{
     amount: 42,
@@ -32,25 +34,27 @@ defmodule ApiProductsWeb.ProductControllerTest do
   describe "index" do
     test "lists all products", %{conn: conn} do
       conn = get(conn, Routes.product_path(conn, :index))
-      assert json_response(conn, 200)["data"] == []
+      assert %{"products" => products} = json_response(conn, 200)
+
+      id_return = id_products_map(list_products())
+      assert id_products_map(list_products()) == id_return
     end
   end
 
   describe "create product" do
-    test "renders product when data is valid", %{conn: conn} do
+    test "renders product when data is valid", %{conn: conn}
+      with_mock IndexProduct,
+        create_product: fn
+          _produxt_params -> {:ok, 201}
+        end do
       conn = post(conn, Routes.product_path(conn, :create), product: @create_attrs)
-      assert %{"id" => id} = json_response(conn, 201)["data"]
+      assert %{"id" => id} = json_response(conn, 200)["product"]
 
-      conn = get(conn, Routes.product_path(conn, :show, id))
+      assert Catalog.get_product(id) != nil
+      assert_called(IndexProduct.create_product(@create_attrs))
 
-      assert %{
-               "id" => id,
-               "amount" => 42,
-               "description" => "some description",
-               "name" => "some name",
-               "price" => 120.5,
-               "sku" => "some sku"
-             } = json_response(conn, 200)["data"]
+      #conn = get(conn, Routes.product_path(conn, :show, id))
+      end
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -62,20 +66,19 @@ defmodule ApiProductsWeb.ProductControllerTest do
   describe "update product" do
     setup [:create_product]
 
-    test "renders product when data is valid", %{conn: conn, product: %Product{id: id} = product} do
-      conn = put(conn, Routes.product_path(conn, :update, product), product: @update_attrs)
-      assert %{"id" => ^id} = json_response(conn, 200)["data"]
+    test "renders product when data is valid", %{conn: conn, product: %Product{id: _id} = product} do
+      with_mock IndexProduct,
+        update_product: fn
+          _updated_product -> {:ok, 201}
+        end do
+        conn = put(conn, Routes.product_path(conn, :update, product), product: @update_attrs)
 
-      conn = get(conn, Routes.product_path(conn, :show, id))
+        assert %{"id" => id} = json_response(conn, 200)["product"]
 
-      assert %{
-               "id" => id,
-               "amount" => 43,
-               "description" => "some updated description",
-               "name" => "some updated name",
-               "price" => 456.7,
-               "sku" => "some updated sku"
-             } = json_response(conn, 200)["data"]
+        assert Catalog.get_product(id) != nil
+
+        assert_called(IndexProduct.update_product(@update_attrs))
+      end
     end
 
     test "renders errors when data is invalid", %{conn: conn, product: product} do
@@ -101,4 +104,14 @@ defmodule ApiProductsWeb.ProductControllerTest do
     product = fixture(:product)
     %{product: product}
   end
-end
+
+  defp list_products() do
+    Catalog.list_products()
+  end
+
+  defp id_products_map(products) do
+    Enum.map(products, fn
+      %{"id" => id} = _product -> id
+      %{id: id} = _product -> id
+    end)
+  end

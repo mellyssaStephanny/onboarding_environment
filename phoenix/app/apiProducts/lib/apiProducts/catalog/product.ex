@@ -9,7 +9,7 @@ defmodule ApiProducts.Catalog.Product do
     field :name,        :string
     field :qtd,         :integer
     field :price,       :float
-    field :barcode,     :integer
+    field :barcode,     :string
     field :description, :string
 
     timestamps()
@@ -22,6 +22,6 @@ defmodule ApiProducts.Catalog.Product do
     |> validate_required([:sku, :name, :description, :qtd, :price, :barcode])
     |> validate_format(:sku, ~r/^([a-zA-Z0-9]|\-)+$/, message: "The SKU field must contain only alphanumerics and hyphen")
     |> validate_number(:price, greater_than: 0)
-    |> validate_length(:barcode, max: 13)
+    |> validate_length(:barcode, min: 8, max: 13)
   end
 end
