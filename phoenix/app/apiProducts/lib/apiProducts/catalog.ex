@@ -24,6 +24,10 @@ defmodule ApiProducts.Catalog do
     Repo.get(Product, id)
   end
 
+  def get_product_by_sku(sku) do
+    Repo.one(from p in Product, where: p.sku == ^sku)
+  end
+
   @doc """
   Creates a product.
   """

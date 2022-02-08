@@ -4,23 +4,27 @@ defmodule ApiProductsWeb.ProductControllerTest do
   import Mock
   alias ApiProducts.Catalog
   alias ApiProducts.Catalog.Product
-  alias ApiProducts.Catalog.IndexProduct
+  alias ApiProducts.IndexProduct
+  alias ApiProducts.Repo
+  alias ApiProducts.Cache
 
   @create_attrs %{
-    amount: 42,
+    qtd: 42,
     description: "some description",
     name: "some name",
     price: 120.5,
-    sku: "some sku"
+    sku: "some-sku",
+    barcode: "123456789"
   }
   @update_attrs %{
-    amount: 43,
+    qtd: 43,
     description: "some updated description",
     name: "some updated name",
     price: 456.7,
-    sku: "some updated sku"
+    sku: "some-updated-sku",
+    barcode: "987654321"
   }
-  @invalid_attrs %{amount: nil, description: nil, name: nil, price: nil, sku: nil}
+  @invalid_attrs %{qtd: nil, description: nil, name: nil, price: nil, sku: nil, barcode: nil}
 
   def fixture(:product) do
     {:ok, product} = Catalog.create_product(@create_attrs)
@@ -28,7 +32,10 @@ defmodule ApiProductsWeb.ProductControllerTest do
   end
 
   setup %{conn: conn} do
+    Repo.delete_all(Product)
+    Cache.flush()
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
+
   end
 
   describe "index" do
@@ -42,16 +49,18 @@ defmodule ApiProductsWeb.ProductControllerTest do
   end
 
   describe "create product" do
-    test "renders product when data is valid", %{conn: conn}
-      with_mock IndexProduct,
+    test "renders product when data is valid", %{conn: conn} do
+      with_mock(IndexProduct,
         create_product: fn
           _produxt_params -> {:ok, 201}
-        end do
+        end) do
+
       conn = post(conn, Routes.product_path(conn, :create), product: @create_attrs)
+      expected_product = Catalog.get_product_by_sku(@create_attrs[:sku])
       assert %{"id" => id} = json_response(conn, 200)["product"]
 
       assert Catalog.get_product(id) != nil
-      assert_called(IndexProduct.create_product(@create_attrs))
+      assert_called(IndexProduct.create_product(expected_product))
 
       #conn = get(conn, Routes.product_path(conn, :show, id))
       end
@@ -91,11 +100,16 @@ defmodule ApiProductsWeb.ProductControllerTest do
     setup [:create_product]
 
     test "deletes chosen product", %{conn: conn, product: product} do
-      conn = delete(conn, Routes.product_path(conn, :delete, product))
-      assert response(conn, 204)
 
-      assert_error_sent 404, fn ->
-        get(conn, Routes.product_path(conn, :show, product))
+      with_mock(IndexProduct,
+        delete_product: fn
+          _delete_by_id -> {:ok, 201}
+        end) do
+        conn = delete(conn, Routes.product_path(conn, :delete, product))
+        response(conn, 204)
+
+        assert Catalog.get_product(product.id) == nil
+        assert_called(IndexProduct.delete_product(product.id))
       end
     end
   end
@@ -115,3 +129,4 @@ defmodule ApiProductsWeb.ProductControllerTest do
       %{id: id} = _product -> id
     end)
   end
+end

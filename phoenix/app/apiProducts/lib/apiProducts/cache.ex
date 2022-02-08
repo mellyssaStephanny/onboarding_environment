@@ -4,7 +4,9 @@ defmodule ApiProducts.Cache do
   def set(key, value) do
     bin = encode(value)
     Redix.command(@conn, ["SET", key, bin])
-  end 
+  end
+
+  def flush(), do: Redix.command(@conn, ["FLUSHDB"])
 
   def get(key), do: decode(Redix.command(@conn, ["GET", key]))
 
