@@ -33,7 +33,7 @@ defmodule ApiProductsWeb.ProductController do
   end
 
   def update(_conn, _params) do
-    {:error, "Could not update product"}
+    {:error, "Could not update product because key is required"}
   end
 
   def delete(conn, %{"id" => _id}) do
