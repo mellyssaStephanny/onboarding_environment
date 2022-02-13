@@ -2,13 +2,32 @@ defmodule ApiProducts.CatalogTest do
   use ApiProducts.DataCase, async: false
 
   alias ApiProducts.Catalog
+  alias ApiProducts.Catalog.Product
 
   describe "products" do
-    alias ApiProducts.Catalog.Product
-
-    @valid_attrs %{qtd: 42, description: "some description", name: "some name", price: 120.5, sku: "some-sku", barcode: "1234567890"}
-    @update_attrs %{qtd: 43, description: "some updated description", name: "some updated name", price: 456.7, sku: "some-updated-sku", barcode: "1234567890"}
-    @invalid_attrs %{qtd: nil, description: nil, name: nil, price: nil, sku: nil, barcode: nil}
+    @valid_attrs %{
+      qtd: 42,
+      description: "some description",
+      name: "some name",
+      price: 120.5,
+      sku: "some-sku",
+      barcode: "1234567890"
+    }
+    @update_attrs %{
+      qtd: 43,
+      description: "some updated description",
+      name: "some updated name",
+      price: 456.7,
+      sku: "some-updated-sku",
+      barcode: "1234567890"
+    }
+    @invalid_attrs %{
+      qtd: nil,
+      description: nil,
+      name: nil,
+      price: nil,
+      sku: nil,
+      barcode: nil}
 
     def product_fixture(attrs \\ %{}) do
       {:ok, product} =
@@ -27,6 +46,11 @@ defmodule ApiProducts.CatalogTest do
     test "get_product!/1 returns the product with given id" do
       product = product_fixture()
       assert Catalog.get_product(product.id) == product
+    end
+
+    test "get_product_by_sku/1 returns the product with given sky" do
+      product = product_fixture()
+      assert Catalog.get_product_by_sku(product.sku) == product
     end
 
     test "create_product/1 with valid data creates a product" do
