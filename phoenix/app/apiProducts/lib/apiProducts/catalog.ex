@@ -21,7 +21,8 @@ defmodule ApiProducts.Catalog do
   Raises `Ecto.NoResultsError` if the Product does not exist.
   """
   def get_product(id) do
-    Repo.get(Product, id)
+    Repo.one(from p in Product, where: p.id == ^id)
+    #Repo.get(Product, id)
   end
 
   def get_product_by_sku(sku) do
@@ -54,6 +55,10 @@ defmodule ApiProducts.Catalog do
 
   def delete_product(%Product{} = product) do
     Repo.delete(product)
+  end
+
+  def delete_all() do
+    Repo.delete_all(Product)
   end
 
   @doc """
