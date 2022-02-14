@@ -1,38 +1,40 @@
 defmodule ApiProductsWeb.Plugs.PlugCacheIdTest do
   use ApiProductsWeb.ConnCase, async: false
 
-  import Mock
-
-  alias ApiProductsWeb.Catalog
   alias ApiProductsWeb.Plugs.PlugCacheId
+  alias ApiProducts.Cache
 
   setup_all do
     %{
       attrs: %{
         id: "id_expected",
-        id_invalid: "id_invalid",
+        id_invalid: "61f161dbd448f703274c5000",
         product: "product_expected"
       }
     }
   end
 
+  setup do
+    ApiProducts.Cache.flush()
+    :ok
+  end
+
   describe "plug cache" do
     test "return error if product id is not found", %{conn: conn, attrs: attrs} do
-      conn =
-        %{conn | params: %{"id" => attrs.id}}
-        |> PlugCacheId.call(attrs.id)
+      conn = PlugCacheId.call(%{conn | params: %{"id" => attrs.id_invalid}}, attrs.id)
 
-      assert conn.assign[:product] == nil
+      assert response(conn, 404) == ""
+      assert conn.assigns[:product] == nil
     end
 
     test "get product in cache", %{conn: conn, attrs: attrs} do
-      with_mock(Catalog, get_product: fn _id -> attrs.product end) do
-        conn =
-          %{conn | params: %{"id" => attrs.id}}
-          |> PlugCacheId.call(attrs.id)
+      Cache.set(attrs.id, attrs.product)
 
-        assert conn.assigns[:product] == attrs.product
-      end
+      conn =
+        %{conn | params: %{"id" => attrs.id}}
+        |> PlugCacheId.call([])
+
+      assert conn.assigns[:product] == attrs.product
     end
   end
 end
