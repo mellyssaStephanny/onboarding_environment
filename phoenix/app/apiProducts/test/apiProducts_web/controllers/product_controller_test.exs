@@ -2,6 +2,7 @@ defmodule ApiProductsWeb.ProductControllerTest do
   use ApiProductsWeb.ConnCase, async: true
 
   import Mock
+
   alias ApiProducts.{Catalog, Cache, IndexProduct, Repo}
   alias ApiProducts.Catalog.Product
 
@@ -21,15 +22,15 @@ defmodule ApiProductsWeb.ProductControllerTest do
     sku: "some-updated-sku",
     barcode: "987654321"
   }
-  # @expected_attrs %{
-  #   id: "61f161dbd448f703274c5d39",
-  #   qtd: 19,
-  #   description: "expected description",
-  #   name: "expected name",
-  #   price: 157.9,
-  #   sku: "sku-expected",
-  #   barcode: "0102030405"
-  # }
+  @expected_attrs %{
+    id: "61f161dbd448f703274c5d39",
+    qtd: 19,
+    description: "expected description",
+    name: "expected name",
+    price: 157.9,
+    sku: "sku-expected",
+    barcode: "0102030405"
+  }
   @invalid_attrs %{qtd: nil, description: nil, name: nil, price: nil, sku: nil, barcode: nil}
 
   def fixture(:product) do
@@ -45,11 +46,14 @@ defmodule ApiProductsWeb.ProductControllerTest do
 
   describe "index" do
     test "lists all products", %{conn: conn} do
-      # terminar mockar elastic
-      #with_mock (Tirexs.HTTP, get: fn _params -> {:ok, 200, %{hits: %{hits: [{%_source: @expected_attrs}]}}} end) do
+      with_mock(Tirexs.HTTP, get: fn _index -> {:ok, 200, %{hits: %{hits: [%{_source: @expected_attrs}]}}} end) do
 
-      conn = get(conn, Routes.product_path(conn, :index))
-      assert %{"products" => products} = json_response(conn, 200)
+        conn
+          |> get(Routes.product_path(conn, :index))
+          |> json_response(200)
+
+        assert_called(Tirexs.HTTP.get("api-products/products/_search"))
+      end
     end
   end
 
@@ -131,11 +135,4 @@ defmodule ApiProductsWeb.ProductControllerTest do
     product = fixture(:product)
     %{product: product}
   end
-
-  # defp id_products_map(products) do
-  #   Enum.map(products, fn
-  #     %{"id" => id} = _product -> id
-  #     %{id: id} = _product -> id
-  #   end)
-  # end
 end
