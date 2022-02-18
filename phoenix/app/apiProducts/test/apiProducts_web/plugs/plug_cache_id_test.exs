@@ -38,7 +38,6 @@ defmodule ApiProductsWeb.Plugs.PlugCacheIdTest do
     end
 
     test "get product not cache", %{conn: conn, attrs: attrs} do
-      Cache.get(attrs.id)
 
       conn =
         %{conn | params: %{"id" => attrs.id_invalid}}
