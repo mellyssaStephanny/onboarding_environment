@@ -19,7 +19,7 @@ defmodule ApiProductsWeb.Plugs.PlugCacheIdTest do
     :ok
   end
 
-  describe "plug cache" do
+  describe "call/2" do
     test "return error if product id is not found", %{conn: conn, attrs: attrs} do
       conn = PlugCacheId.call(%{conn | params: %{"id" => attrs.id_invalid}}, attrs.id)
 
@@ -35,6 +35,16 @@ defmodule ApiProductsWeb.Plugs.PlugCacheIdTest do
         |> PlugCacheId.call([])
 
       assert conn.assigns[:product] == attrs.product
+    end
+
+    test "get product not cache", %{conn: conn, attrs: attrs} do
+      Cache.get(attrs.id)
+
+      conn =
+        %{conn | params: %{"id" => attrs.id_invalid}}
+        |> PlugCacheId.call([attrs.product])
+
+      assert conn.assigns[:product] == nil
     end
   end
 end
