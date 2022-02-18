@@ -59,14 +59,15 @@ defmodule ApiProductsWeb.ProductControllerTest do
 
   describe "create product" do
     test "renders product when data is valid", %{conn: conn} do
-      with_mock(IndexProduct, create_product: fn _produxt_params -> {:ok, 201} end) do
+      with_mock(IndexProduct, put_product: fn _produxt_params -> {:ok, 201} end) do
 
         conn = post(conn, Routes.product_path(conn, :create), product: @create_attrs)
         expected_product = Catalog.get_product_by_sku(@create_attrs[:sku])
-        assert %{"id" => id} = json_response(conn, 200)["product"]
+
+        assert %{"id" => id} = json_response(conn, 201)["product"]
 
         assert Catalog.get_product(id) != nil
-        assert_called(IndexProduct.create_product(expected_product))
+        assert_called(IndexProduct.put_product(expected_product))
       end
     end
 
@@ -132,7 +133,7 @@ defmodule ApiProductsWeb.ProductControllerTest do
     test "return product not found", %{conn: conn, product: product} do
       conn
       |> get(Routes.product_path(conn, :delete, product))
-      |> response(200) #retorno 404 da erro
+      |> response(404)
     end
   end
 
@@ -153,6 +154,11 @@ defmodule ApiProductsWeb.ProductControllerTest do
       }
 
       assert json_response(conn, 200)["product"] == expected_product
+    end
+
+    test "renders product when data is invalid", %{conn: conn, product:} do
+      conn = get(conn, Routes.product_path(conn, :show, id))
+      response(conn, 404)
     end
   end
 
