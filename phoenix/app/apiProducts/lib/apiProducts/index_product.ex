@@ -2,7 +2,7 @@ defmodule ApiProducts.IndexProduct do
 
   import Tirexs.HTTP
 
-  def create_product(product) do
+  def put_product(product) do
     put("api-products/products/#{product.id}", format_json(product))
   end
 
@@ -21,10 +21,6 @@ defmodule ApiProducts.IndexProduct do
 
   def delete_product(product) do
     delete("/api-products/products/#{product.id}")
-  end
-
-  def update_product(product) do
-    put("api-products/products/#{product.id}", format_json(product))
   end
 
   def search_product(params) do
