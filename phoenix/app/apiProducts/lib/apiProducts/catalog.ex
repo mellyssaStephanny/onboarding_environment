@@ -22,7 +22,6 @@ defmodule ApiProducts.Catalog do
   """
   def get_product(id) do
     Repo.one(from p in Product, where: p.id == ^id)
-    #Repo.get(Product, id)
   end
 
   def get_product_by_sku(sku) do
