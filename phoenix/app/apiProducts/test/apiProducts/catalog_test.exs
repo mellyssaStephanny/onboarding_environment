@@ -4,30 +4,34 @@ defmodule ApiProducts.CatalogTest do
   alias ApiProducts.Catalog
   alias ApiProducts.Catalog.Product
 
-  describe "products" do
-    @valid_attrs %{
-      qtd: 42,
-      description: "some description",
-      name: "some name",
-      price: 120.5,
-      sku: "some-sku",
-      barcode: "1234567890"
+  setup_all do
+    %{
+      valid_attrs: %{
+        amount: 42,
+        description: "some description",
+        name: "some name",
+        price: 120.5,
+        sku: "some-sku",
+        barcode: "123456789"
+      },
+      update_attrs: %{
+        qtd: 43,
+        description: "some updated description",
+        name: "some updated name",
+        price: 456.7,
+        sku: "some-updated-sku",
+        barcode: "123456789"
+      },
+      invalid_attrs: %{
+        qtd: nil,
+        description: nil,
+        name: nil,
+        price: nil,
+        sku: nil,
+        barcode: nil
+      }
     }
-    @update_attrs %{
-      qtd: 43,
-      description: "some updated description",
-      name: "some updated name",
-      price: 456.7,
-      sku: "some-updated-sku",
-      barcode: "1234567890"
-    }
-    @invalid_attrs %{
-      qtd: nil,
-      description: nil,
-      name: nil,
-      price: nil,
-      sku: nil,
-      barcode: nil}
+  end
 
     def product_fixture(attrs \\ %{}) do
       {:ok, product} =
