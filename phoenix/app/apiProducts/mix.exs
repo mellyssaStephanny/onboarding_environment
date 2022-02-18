@@ -41,6 +41,7 @@ defmodule ApiProducts.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:mongodb_ecto, github: "michalmuskala/mongodb_ecto"},
+      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:redis, "~> 0.1"},
       {:redix, "~> 1.1"},
       {:exredis, ">= 0.2.4"},
