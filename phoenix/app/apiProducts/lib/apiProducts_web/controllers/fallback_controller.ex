@@ -15,12 +15,10 @@ defmodule ApiProductsWeb.FallbackController do
     render(conn, "show.json", product: product)
   end
 
-  def call(conn, {:ok, :created}) do
+  def call(conn, {:ok, :created, product}) do
     conn
     |> put_status(:created)
-    |> render(:"201")
-    |> halt()
-    #|> render("show.json", product: product)
+    |> render("show.json", product: product)
   end
 
   # This clause handles errors returned by Ecto's insert/update/delete.
