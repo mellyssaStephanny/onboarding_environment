@@ -28,6 +28,12 @@ defmodule ApiProducts.DataCase do
   end
 
   setup tags do
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(ApiProducts.Repo)
+
+    unless tags[:async] do
+      Ecto.Adapters.SQL.Sandbox.mode(ApiProducts.Repo, {:shared, self()})
+    end
+
     ApiProducts.Repo.delete_all(ApiProducts.Catalog.Product)
     :ok
   end
