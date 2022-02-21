@@ -15,7 +15,7 @@ defmodule ApiProductsWeb.ProductController do
 
   def create(_conn, %{"product" => product_params}) do
     case Product.create(product_params) do
-      {:ok, %CatalogProduct{} = product} -> product
+      {:ok, product} -> {:ok, :created, product}
       error -> error
     end
   end
