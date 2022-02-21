@@ -12,11 +12,11 @@ defmodule ApiProducts.CacheTest do
   end
 
   describe "set/2" do
-    test "save data in cache", %{key: key, value: value} do
+    test "set data in cache", %{key: key, value: value} do
       Cache.set(key, value)
 
-      assert Cache.get(key) == {:ok, "some_value"}
       assert Cache.set(key, value) == {:ok, "OK"}
+      assert Cache.get(key) == {:ok, "some_value"}
     end
   end
 
