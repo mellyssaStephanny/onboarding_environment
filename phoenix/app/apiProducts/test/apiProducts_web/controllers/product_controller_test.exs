@@ -44,7 +44,7 @@ defmodule ApiProductsWeb.ProductControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-  describe "index" do
+  describe "index/2" do
     test "lists all products", %{conn: conn} do
       with_mock(Tirexs.HTTP, get: fn _index -> {:ok, 200, %{hits: %{hits: [%{_source: @expected_attrs}]}}} end) do
 
@@ -62,11 +62,11 @@ defmodule ApiProductsWeb.ProductControllerTest do
       with_mock(IndexProduct, put_product: fn _produxt_params -> {:ok, 201} end) do
 
         conn = post(conn, Routes.product_path(conn, :create), product: @create_attrs)
-        expected_product = Catalog.get_product_by_sku(@create_attrs[:sku])
+        expected_product = Catalog.get_product_by_sku(@create_attrs.sku)
 
-        assert %{"id" => id} = json_response(conn, 201)["product"]
+        assert %{"sku" => sku} = json_response(conn, 200)["product"]
 
-        assert Catalog.get_product(id) != nil
+        assert Catalog.get_product_by_sku(sku) != nil
         assert_called(IndexProduct.put_product(expected_product))
       end
     end
@@ -156,7 +156,7 @@ defmodule ApiProductsWeb.ProductControllerTest do
       assert json_response(conn, 200)["product"] == expected_product
     end
 
-    test "renders product when data is invalid", %{conn: conn, product:} do
+    test "renders product when data is invalid", %{conn: conn} do
       conn = get(conn, Routes.product_path(conn, :show, id))
       response(conn, 404)
     end
