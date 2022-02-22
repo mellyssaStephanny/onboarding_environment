@@ -27,7 +27,7 @@ defmodule ApiProductsWeb.Services.Product do
     case Catalog.update_product(product, product_params) do
       {:ok, product} = result ->
         Cache.set(product.id, product)
-        IndexProduct.update_product(product)
+        IndexProduct.put_product(product)
 
         result
 

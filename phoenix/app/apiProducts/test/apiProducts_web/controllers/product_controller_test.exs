@@ -64,7 +64,7 @@ defmodule ApiProductsWeb.ProductControllerTest do
         conn = post(conn, Routes.product_path(conn, :create), product: @create_attrs)
         expected_product = Catalog.get_product_by_sku(@create_attrs.sku)
 
-        assert %{"sku" => sku} = json_response(conn, 200)["product"]
+        assert %{"sku" => sku} = json_response(conn, 201)["product"]
 
         assert Catalog.get_product_by_sku(sku) != nil
         assert_called(IndexProduct.put_product(expected_product))
@@ -72,8 +72,12 @@ defmodule ApiProductsWeb.ProductControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, Routes.product_path(conn, :create), product: @create_attrs)
-      assert json_response(conn, 200)["errors"] != %{
+      response =
+        conn
+        |> post(Routes.product_path(conn, :create, product: @create_attrs))
+        |> json_response(200)
+
+      assert response["errors"] == %{
         "sku" => ["can't be blank"],
         "qtd" => ["can't be blank"],
         "name" => ["can't be blank"],
@@ -157,7 +161,7 @@ defmodule ApiProductsWeb.ProductControllerTest do
     end
 
     test "renders product when data is invalid", %{conn: conn} do
-      conn = get(conn, Routes.product_path(conn, :show, id))
+      conn = get(conn, Routes.product_path(conn, :show, id: "81f161dbd448f703274c5d53"))
       response(conn, 404)
     end
   end
