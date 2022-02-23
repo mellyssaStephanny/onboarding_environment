@@ -4,6 +4,8 @@ defmodule ApiProductsWeb.ProductServicesTest
   import Mock
 
   alias ApiProductsWeb.Services.Product
+  alias ApiProducts.IndexProduct
+  alias ApiProducts.Catalog
 
   setup_all do
     %{
@@ -23,24 +25,75 @@ defmodule ApiProductsWeb.ProductServicesTest
         price: 0,
         sku: "invalid-sku",
         barcode: "12345"
+      },
+      updated_attrs: %{
+        id: "61f161dbd448f703274c5d39",
+        qtd: 19,
+        description: "updated description",
+        name: "updated name",
+        price: 157.9,
+        sku: "sku-updated",
+        barcode: "0010020030"
       }
     }
   end
 
-  describe "list/1" do
-    test "lists all products", %{conn: conn} do
+  describe "fetch_all/1" do
+    test "lists all products by elasticsearch", %{conn: conn} do
+      with_mock(Tirexs.HTTP, get: fn _index -> {:ok, 200} end) do
+
+        assert_called(Tirexs.HTTP.get("api-products/products/_search"))
+      end
+    end
+
+    test "lists all products by database", %{conn: conn} do
+      with_mock(Catalog, list_product: fn _get_product -> {:ok, 201} end) do
+
+        assert_called(Catalog.list_product(product))
+      end
     end
   end
 
-  describe "get/1" do
-  end
-
   describe "create/1" do
+    test "create product with valid params", %{create_attrs: create_attrs} do
+      with_mock(IndexProduct, put_product: fn _produxt_params -> {:ok, 201} end) do
+
+        {:ok, result} = Catalog.create_product(create_attrs)
+        assert called(IndexProduct.put_product(create_attrs))
+      end
+    end
+
+    test "create product with invalid params", %{invalid_attrs: invalid_attrs} do
+      assert {:error, %Ecto.Changeset{}} = Catalog.create_product(invalid_attrs)
+    end
   end
 
-  describe "update/1" do
+  describe "update/2" do
+    test "update with product invalid id", %{conn: conn} do
+      assert Catalog.update_product(nil, "invalid_id") == {:error, :not_found}
+    end
+
+    test "update product with valid id", %{updated_attrs: updated_attrs, product: product} do
+      with_mock(IndexProduct, put_product: fn _produxt_params -> {:ok, 201} end) do
+        {:ok, result} = Product.update(product, updated_attrs)
+
+        assert called(IndexProduct.put_product(result))
+      end
+    end
   end
 
   describe "delete/1" do
+    test "delete product with invalid id" do
+      assert Product.delete(nil) == {:error, :not_found}
+    end
+
+    test "delete product existing", %{product: product} do
+      with_mock(IndexProduct, delete_product: fn _delete -> {:ok, 201} end) do
+
+        Product.delete(product)
+
+        assert_called(IndexProduct.delete_product(product))
+      end
+    end
   end
 end
