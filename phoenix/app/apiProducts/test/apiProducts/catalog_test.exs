@@ -2,7 +2,6 @@ defmodule ApiProducts.CatalogTest do
   use ApiProducts.DataCase, async: false
 
   alias ApiProducts.Catalog
-  alias ApiProducts.Catalog.Product
 
   setup_all do
     %{
@@ -37,28 +36,28 @@ defmodule ApiProducts.CatalogTest do
     {:ok, product} =
       attrs
       |> Enum.into(@valid_attrs)
-      |> Catalog.create_product()
+      |> Product.create()
 
     product
   end
 
   test "list_products/0 returns all products" do
     product = product_fixture()
-    assert Catalog.list_products() == [product]
+    assert Product.list() == [product]
   end
 
-  test "get_product!/1 returns the product with given id" do
+  test "get_product/1 returns the product with given id" do
     product = product_fixture()
-    assert Catalog.get_product(product.id) == product
+    assert Product.get(product.id) == product
   end
 
   test "get_product_by_sku/1 returns the product with given sky" do
     product = product_fixture()
-    assert Catalog.get_product_by_sku(product.sku) == product
+    assert Product.get_by_sku(product.sku) == product
   end
 
   test "create_product/1 with valid data creates a product" do
-    assert {:ok, %Product{} = product} = Catalog.create_product(@valid_attrs)
+    assert {:ok, Product = product} = Product.create(@valid_attrs)
     assert product.qtd == 42
     assert product.description == "some description"
     assert product.name == "some name"
@@ -68,12 +67,12 @@ defmodule ApiProducts.CatalogTest do
   end
 
   test "create_product/1 with invalid data returns error changeset" do
-    assert {:error, %Ecto.Changeset{}} = Catalog.create_product(@invalid_attrs)
+    assert {:error, %Ecto.Changeset{}} = Product.create(@invalid_attrs)
   end
 
   test "update_product/2 with valid data updates the product" do
     product = product_fixture()
-    assert {:ok, %Product{} = product} = Catalog.update_product(product, @update_attrs)
+    assert {:ok, %Product{} = product} = Product.update(product, @update_attrs)
     assert product.qtd == 43
     assert product.description == "some updated description"
     assert product.name == "some updated name"
@@ -84,18 +83,18 @@ defmodule ApiProducts.CatalogTest do
 
   test "update_product/2 with invalid data returns error changeset" do
     product = product_fixture()
-    assert {:error, %Ecto.Changeset{}} = Catalog.update_product(product, @invalid_attrs)
-    assert product == Catalog.get_product(product.id)
+    assert {:error, %Ecto.Changeset{}} = Product.update(product, @invalid_attrs)
+    assert product == Product.get(product.id)
   end
 
   test "delete_product/1 deletes the product" do
     product = product_fixture()
-    assert {:ok, %Product{}} = Catalog.delete_product(product)
-    assert Catalog.get_product(product.id) == nil
+    assert {:ok, %Product{}} = Product.delete(product)
+    assert Product.get(product.id) == nil
   end
 
   test "change_product/1 returns a product changeset" do
     product = product_fixture()
-    assert %Ecto.Changeset{} = Catalog.change_product(product)
+    assert %Ecto.Changeset{} = Product.change(product)
   end
 end

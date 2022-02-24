@@ -1,6 +1,9 @@
 defmodule ApiProducts.Catalog.Product do
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query
+  alias ApiProducts.Repo
+  alias __MODULE__
 
   @primary_key {:id, :binary_id, autogenerate: true}
 
@@ -24,4 +27,30 @@ defmodule ApiProducts.Catalog.Product do
     |> validate_number(:price, greater_than: 0)
     |> validate_length(:barcode, min: 8, max: 13)
   end
+
+  def list, do: Repo.all(Product)
+
+  def get(id) do
+    Repo.one(from product in Product, where: product.id == ^id)
+  end
+
+  def get_by_sku(sku), do: Repo.one(from product in Product, where: product.sku == ^sku)
+
+  def create(product, attrs \\ %{}) do
+    product
+    |> changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def update(product, attrs) do
+    product
+    |> Product.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def delete(product), do: Repo.delete(product)
+
+  def delete_all(), do: Repo.delete_all(Product)
+
+  def change(product, attrs \\ %{}), do: Product.changeset(product, attrs)
 end

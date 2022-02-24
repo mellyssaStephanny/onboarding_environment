@@ -15,6 +15,10 @@ defmodule ApiProductsWeb.FallbackController do
     render(conn, "show.json", product: product)
   end
 
+  def call(conn, {:ok, :no_content}) do
+    send_resp(conn, :no_content, "")
+  end
+
   def call(conn, {:ok, :created, product}) do
     conn
     |> put_status(:created)

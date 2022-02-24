@@ -28,8 +28,7 @@ defmodule ApiProducts.DataCase do
   end
 
   setup _tags do
-    ApiProducts.Repo.delete_all(ApiProducts.Catalog.Product)
-    :ok
+    Mongo.Ecto.truncate(ApiProducts.Repo)
   end
 
   @doc """

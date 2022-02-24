@@ -4,7 +4,6 @@ defmodule ApiProducts.IndexProductTest do
   import Mock
 
   alias ApiProducts.IndexProduct
-  alias ApiProducts.Catalog
 
   @product %{
     qtd: 42,
@@ -39,13 +38,13 @@ defmodule ApiProducts.IndexProductTest do
 
   describe "get product/1" do
     test "get product if id not valid" do
-      product = IndexProduct.get_product(@invalid_id)
+      product = IndexProduct.put_product(@invalid_id)
       assert product == {:error, 422}
     end
 
     test "get product if id is valid" do
       IndexProduct.put_product(@product)
-      product = IndexProduct.get_product(@product.id)
+      product = IndexProduct.put_product(@product.id)
       assert product[:_id] == @product.id
     end
   end
