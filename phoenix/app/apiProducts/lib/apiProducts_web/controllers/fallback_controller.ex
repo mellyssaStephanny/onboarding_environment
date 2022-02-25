@@ -19,6 +19,10 @@ defmodule ApiProductsWeb.FallbackController do
     send_resp(conn, :no_content, "")
   end
 
+  def call(conn, {:ok, :created}) do
+    send_resp(conn, 201, "")
+  end
+
   def call(conn, {:ok, :created, product}) do
     conn
     |> put_status(:created)

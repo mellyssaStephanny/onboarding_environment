@@ -8,38 +8,43 @@ defmodule ApiProductsWeb.ProductController do
 
   action_fallback ApiProductsWeb.FallbackController
 
-  plug ApiProductsWeb.Plugs.PlugCacheId when action in [:show, :update, :delete, :create]
+  plug ApiProductsWeb.Plugs.PlugCacheId when action in [:show, :update, :delete]
 
-  def index(conn, params) do
-    products = Product.fetch_all(params)
-    render(conn, "index.json", products: products)
+  def fetch_all(params) do
+    case IndexProduct.search_product(params) do
+      {:ok, products} -> products
+      {:error, 422} -> {:ok, Product.list()}
+    end
   end
 
   def create(_conn, %{"product" => product_params}) do
-    require IEx; IEx.pry()
-    case Product.create(%Product{}, product_params) do
-      {:ok, product} -> {:ok, :created, product}
+    case Product.create(product_params) do
+      {:ok, %Product{} = product} ->
+        {:created, product}
+      error ->
+        error
+    end
+  end
+
+  def update(product, product_params) do
+    case Product.update(product, product_params) do
+      {:ok, product} = result ->
+        Cache.set(product.id, product)
+        IndexProduct.put_product(product)
+
+        result
+
       error -> error
     end
   end
 
-  def create(_conn, _params) do
-    {:error, "Product key required"}
-  end
+  def delete(product) do
+    case Product.delete(product) do
+      {:ok, _} ->
+        Cache.delete(product.id)
+        IndexProduct.delete_product(product.id)
 
-  def show(conn, _) do
-    conn.assigns[:product]
-  end
-
-  def update(conn, %{"product" => product_params}) do
-    Product.update(conn.assigns[:product], product_params)
-  end
-
-  def update(_conn, _params) do
-    {:error, "Could not update product because key is required"}
-  end
-
-  def delete(conn, %{"id" => _id}) do
-    Product.delete(conn.assigns[:product])
+        {:ok, :no_content}
+    end
   end
 end

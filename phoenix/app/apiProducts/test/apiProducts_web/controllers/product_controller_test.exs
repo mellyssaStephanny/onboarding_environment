@@ -15,11 +15,11 @@ defmodule ApiProductsWeb.ProductControllerTest do
     barcode: "123456789"
   }
   @update_attrs %{
-    qtd: 43,
-    description: "some updated description",
-    name: "some updated name",
-    price: 456.7,
     sku: "some-updated-sku",
+    name: "some updated name",
+    description: "some updated description",
+    qtd: 43,
+    price: 456.7,
     barcode: "987654321"
   }
   @expected_attrs %{
@@ -44,10 +44,9 @@ defmodule ApiProductsWeb.ProductControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-  describe "index/2" do
+  describe "fetch_all/1" do
     test "lists all products", %{conn: conn} do
       with_mock(Tirexs.HTTP, get: fn _index -> {:ok, 200, %{hits: %{hits: [%{_source: @expected_attrs}]}}} end) do
-
         conn
         |> get(Routes.product_path(conn, :index))
         |> json_response(200)
@@ -60,27 +59,20 @@ defmodule ApiProductsWeb.ProductControllerTest do
   describe "create product" do
     test "renders product when data is valid", %{conn: conn} do
       with_mock(IndexProduct, put_product: fn _produxt_params -> {:ok, 201} end) do
-
-        response = post(conn, Routes.product_path(conn, :create), product: @create_attrs)
-        #json_response(201)
+        response =
+          conn
+          |> post(Routes.product_path(conn, :create), product: @create_attrs)
+          |> json_response(200)
 
         expected_product = Product.get_by_sku(@create_attrs.sku)
-        require IEx; IEx.pry()
-        sku = expected_product.sku
 
-        #assert %{"sku" => @create_attrs.sku} = response["product"]
-        #assert %{"sku" => @create_attrs.sku} = json_response(conn, 200)["product"]
-
-        #assert expected_product != nil
-
-        #assert Product.get_by_sku(sku) != nil
-        assert_called(IndexProduct.put_product(@create_attrs))
+        assert_called(IndexProduct.put_product(expected_product))
       end
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, Routes.product_path(conn, :create), product: @create_attrs)
-      assert json_response(conn, 201)["errors"] != %{
+      assert json_response(conn, 422)["errors"] == %{
         "sku" => ["can't be blank"],
         "qtd" => ["can't be blank"],
         "name" => ["can't be blank"],
@@ -164,7 +156,7 @@ defmodule ApiProductsWeb.ProductControllerTest do
       assert json_response(conn, 200)["product"] == expected_product
     end
 
-    test "renders product when data is invalid", %{conn: conn} do
+    test "renders error when data is invalid", %{conn: conn} do
       conn = get(conn, Routes.product_path(conn, :show, id = "61e580fc6057a40203db022e"))
       response(conn, 404)
     end

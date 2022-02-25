@@ -1,8 +1,6 @@
 defmodule ApiProducts.IndexProductTest do
   use ApiProductsWeb.ConnCase, async: false
 
-  import Mock
-
   alias ApiProducts.IndexProduct
 
   @product %{
@@ -30,14 +28,12 @@ defmodule ApiProducts.IndexProductTest do
 
   describe "put product/1" do
     test "create new product" do
-      with_mock(IndexProduct, put_product: fn _put_product -> {:ok, 201} end) do
-        assert IndexProduct.put_product(@product) == {:ok, 201}
-      end
+      assert IndexProduct.put_product(@product) == {:ok, 201}
     end
   end
 
   describe "get product/1" do
-    test "get product if id not valid" do
+    test "get product if id invalid" do
       product = IndexProduct.put_product(@invalid_id)
       assert product == {:error, 422}
     end
@@ -51,16 +47,15 @@ defmodule ApiProducts.IndexProductTest do
 
   describe "search product/1" do
     test "search product" do
-      with_mock(IndexProduct, put_product: fn _produxt_update -> {:ok, 201} end) do
-        assert IndexProduct.search_product(%{"id" => "61f1768ad157f704580d54f1"}) == {"id"}
-      end
+      IndexProduct.put_product(@product)
+      assert IndexProduct.search_product(%{"id" => "61f1768ad157f704580d54f1"}) == {"id"}
     end
   end
 
   describe "update product/1" do
     test "update a product if id is valid" do
-      IndexProduct.put_product(@product)
-      product = IndexProduct.search_product(@update_product.id)
+      IndexProduct.put_product(@update_product)
+      product = IndexProduct.put_product(@update_product.id)
 
       assert product[:_id] == @product.id
     end

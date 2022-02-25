@@ -3,7 +3,6 @@ defmodule ApiProducts.IndexProduct do
   import Tirexs.HTTP
 
   def put_product(product) do
-    require IEx; IEx.pry()
     put("api-products/products/#{product.id}", format_json(product))
   end
 

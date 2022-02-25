@@ -1,7 +1,7 @@
 defmodule ApiProducts.CatalogTest do
   use ApiProducts.DataCase, async: false
 
-  alias ApiProducts.Catalog
+  alias ApiProducts.Catalog.Product
 
   setup_all do
     %{
