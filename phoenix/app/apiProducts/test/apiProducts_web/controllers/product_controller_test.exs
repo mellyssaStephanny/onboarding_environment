@@ -1,9 +1,6 @@
 defmodule ApiProductsWeb.ProductControllerTest do
   use ApiProductsWeb.ConnCase, async: true
 
-  import Mock
-
-  alias ApiProducts.{Cache, IndexProduct, Repo}
   alias ApiProducts.Catalog.Product
 
   @create_attrs %{
@@ -22,118 +19,108 @@ defmodule ApiProductsWeb.ProductControllerTest do
     price: 456.7,
     barcode: "987654321"
   }
-  @expected_attrs %{
-    id: "61f161dbd448f703274c5d39",
-    qtd: 19,
-    description: "expected description",
-    name: "expected name",
-    price: 157.9,
-    sku: "sku-expected",
-    barcode: "0102030405"
-  }
+  # @expected_attrs %{
+  #   id: "61f161dbd448f703274c5d39",
+  #   qtd: 19,
+  #   description: "expected description",
+  #   name: "expected name",
+  #   price: 157.9,
+  #   sku: "sku-expected",
+  #   barcode: "0102030405"
+  # }
   @invalid_attrs %{qtd: nil, description: nil, name: nil, price: nil, sku: nil, barcode: nil}
 
   def fixture(:product) do
-    {:ok, product} = Product.create(@create_attrs)
+    {:ok, product} = Product.create(%Product{}, @create_attrs)
     product
   end
 
   setup %{conn: conn} do
-    Repo.delete_all(Product)
-    Cache.flush()
+    # Repo.delete_all(Product)
+    # Cache.flush()
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-  describe "fetch_all/1" do
+  describe "index/1" do
     test "lists all products", %{conn: conn} do
-      with_mock(Tirexs.HTTP, get: fn _index -> {:ok, 200, %{hits: %{hits: [%{_source: @expected_attrs}]}}} end) do
-        conn
-        |> get(Routes.product_path(conn, :index))
-        |> json_response(200)
+      response = get(conn, Routes.product_path(conn, :index))
+      assert response |> json_response(200)
 
-        assert_called(Tirexs.HTTP.get("api-products/products/_search"))
-      end
+      response |> json_response(200)
     end
   end
 
   describe "create product" do
     test "renders product when data is valid", %{conn: conn} do
-      with_mock(IndexProduct, put_product: fn _produxt_params -> {:ok, 201} end) do
-        response =
-          conn
-          |> post(Routes.product_path(conn, :create), product: @create_attrs)
-          |> json_response(200)
+      response = post(conn, Routes.product_path(conn, :create), product: @create_attrs)
 
-        expected_product = Product.get_by_sku(@create_attrs.sku)
+      assert response |> json_response(201)
 
-        assert_called(IndexProduct.put_product(expected_product))
-      end
+      expected_product = Product.get_by_sku(@create_attrs.sku)
+      assert expected_product
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, Routes.product_path(conn, :create), product: @create_attrs)
+
       assert json_response(conn, 422)["errors"] == %{
-        "sku" => ["can't be blank"],
-        "qtd" => ["can't be blank"],
-        "name" => ["can't be blank"],
-        "price" => ["can't be blank"],
-        "barcode" => ["can't be blank"],
-        "description" => ["can't be blank"]
-      }
+               "sku" => ["can't be blank"],
+               "qtd" => ["can't be blank"],
+               "name" => ["can't be blank"],
+               "price" => ["can't be blank"],
+               "barcode" => ["can't be blank"],
+               "description" => ["can't be blank"]
+             }
     end
 
     test "return invalid params", %{conn: conn} do
       conn = post(conn, Routes.product_path(conn, :create), product: @invalid_attrs)
+
       assert json_response(conn, 422)["errors"] == %{
-        "sku" => ["can't be blank"],
-        "qtd" => ["can't be blank"],
-        "name" => ["can't be blank"],
-        "price" => ["can't be blank"],
-        "barcode" => ["can't be blank"],
-        "description" => ["can't be blank"]
-      }
+               "sku" => ["can't be blank"],
+               "qtd" => ["can't be blank"],
+               "name" => ["can't be blank"],
+               "price" => ["can't be blank"],
+               "barcode" => ["can't be blank"],
+               "description" => ["can't be blank"]
+             }
     end
   end
 
   describe "update product" do
     setup [:create_product]
 
-    test "renders product when data is valid", %{conn: conn, product: %Product{id: _id} = product}  do
-      with_mock(IndexProduct, put_product: fn _produxt_update -> {:ok, 201} end) do
-        conn = put(conn, Routes.product_path(conn, :update, product), product: @update_attrs)
+    test "renders product when data is valid", %{conn: conn, product: %Product{id: id} = product} do
+      conn = put(conn, Routes.product_path(conn, :update, id), product: @update_attrs)
 
-        assert %{"id" => id} = json_response(conn, 200)["product"]
+      assert %{"id" => id} = json_response(conn, 200)["product"]
 
-        assert Product.get(id) != nil
-        assert_called(IndexProduct.put_product(@update_attrs))
-      end
+      refute Product.get(id)
     end
 
-    test "renders errors when data is invalid", %{conn: conn, product: product} do
-      conn = put(conn, Routes.product_path(conn, :update, product), product: @invalid_attrs)
+    test "renders errors when data is invalid", %{conn: conn, product: %Product{id: id} = product} do
+      conn = put(conn, Routes.product_path(conn, :update, id), product: @invalid_attrs)
+
       assert json_response(conn, 422)["errors"] == %{
-        "sku" => ["can't be blank"],
-        "qtd" => ["can't be blank"],
-        "name" => ["can't be blank"],
-        "price" => ["can't be blank"],
-        "barcode" => ["can't be blank"],
-        "description" => ["can't be blank"]
-      }
+               "sku" => ["can't be blank"],
+               "qtd" => ["can't be blank"],
+               "name" => ["can't be blank"],
+               "price" => ["can't be blank"],
+               "barcode" => ["can't be blank"],
+               "description" => ["can't be blank"]
+             }
     end
   end
 
   describe "delete product" do
     setup [:create_product]
 
-    test "deletes chosen product", %{conn: conn, product: product} do
-      with_mock(IndexProduct, delete_product: fn _delete_by_id -> {:ok, 201} end) do
-        conn
-        |> delete(Routes.product_path(conn, :delete, product))
-        |> response(204)
+    test "deletes chosen product", %{conn: conn, product: %Product{id: id} = product} do
+      response = conn |> delete(Routes.product_path(conn, :delete, id))
 
-        assert Product.get(product.id) == nil
-        assert_called(IndexProduct.delete_product(product))
-      end
+      assert response |> json_response(204)
+
+      assert is_nil(Product.get(product.id))
     end
   end
 
@@ -157,7 +144,7 @@ defmodule ApiProductsWeb.ProductControllerTest do
     end
 
     test "renders error when data is invalid", %{conn: conn} do
-      conn = get(conn, Routes.product_path(conn, :show, id = "61e580fc6057a40203db022e"))
+      conn = get(conn, Routes.product_path(conn, :show, "id"))
       response(conn, 404)
     end
   end
