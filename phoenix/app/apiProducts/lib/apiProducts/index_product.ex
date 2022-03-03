@@ -1,5 +1,4 @@
 defmodule ApiProducts.IndexProduct do
-
   import Tirexs.HTTP
 
   def put_product(product) do
@@ -19,8 +18,8 @@ defmodule ApiProducts.IndexProduct do
     }
   end
 
-  def delete_product(product) do
-    delete("/api-products/products/#{product.id}")
+  def delete_product(id) do
+    delete("/api-products/products/#{id}")
   end
 
   def search_product(params) do

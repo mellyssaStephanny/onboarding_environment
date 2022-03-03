@@ -10,23 +10,27 @@ defmodule ApiProductsWeb.ProductController do
 
   plug ApiProductsWeb.Plugs.PlugCacheId when action in [:show, :update, :delete]
 
-  def fetch_all(params) do
+  def index(conn, params) do
     case IndexProduct.search_product(params) do
-      {:ok, products} -> products
-      {:error, 422} -> {:ok, Product.list()}
+      {:ok, products} -> json(conn, products)
+      {:error, 422} -> {:error, "Bad Request"}
     end
   end
 
   def create(_conn, %{"product" => product_params}) do
-    case Product.create(product_params) do
+    #IO.inspect(product_params)
+    case Product.create(%Product{}, product_params) do
       {:ok, %Product{} = product} ->
-        {:created, product}
-      error ->
-        error
+        {:ok, :created, product}
+
+      {:error, error} ->
+        {:error, error}
     end
   end
 
-  def update(product, product_params) do
+  def update(id, product_params) do
+    product = Product.get(id) |> Repo.one()
+
     case Product.update(product, product_params) do
       {:ok, product} = result ->
         Cache.set(product.id, product)
@@ -34,15 +38,16 @@ defmodule ApiProductsWeb.ProductController do
 
         result
 
-      error -> error
+      {:error, error} ->
+        {:error, error}
     end
   end
 
-  def delete(product) do
-    case Product.delete(product) do
+  def delete(id) do
+    case Product.delete(id) do
       {:ok, _} ->
-        Cache.delete(product.id)
-        IndexProduct.delete_product(product.id)
+        Cache.delete(id)
+        IndexProduct.delete_product(id)
 
         {:ok, :no_content}
     end

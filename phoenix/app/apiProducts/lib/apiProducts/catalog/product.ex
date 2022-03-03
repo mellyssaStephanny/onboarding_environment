@@ -8,11 +8,11 @@ defmodule ApiProducts.Catalog.Product do
   @primary_key {:id, :binary_id, autogenerate: true}
 
   schema "products" do
-    field :sku,         :string
-    field :name,        :string
-    field :qtd,         :integer
-    field :price,       :float
-    field :barcode,     :string
+    field :sku, :string
+    field :name, :string
+    field :qtd, :integer
+    field :price, :float
+    field :barcode, :string
     field :description, :string
 
     timestamps()
@@ -20,10 +20,13 @@ defmodule ApiProducts.Catalog.Product do
 
   @doc false
   def changeset(product, attrs) do
+    IO.inspect(attrs)
     product
     |> cast(attrs, [:sku, :name, :description, :qtd, :price, :barcode])
     |> validate_required([:sku, :name, :description, :qtd, :price, :barcode])
-    |> validate_format(:sku, ~r/^([a-zA-Z0-9]|\-)+$/, message: "The SKU field must contain only alphanumerics and hyphen")
+    |> validate_format(:sku, ~r/^([a-zA-Z0-9]|\-)+$/,
+      message: "The SKU field must contain only alphanumerics and hyphen"
+    )
     |> validate_number(:price, greater_than: 0)
     |> validate_length(:barcode, min: 8, max: 13)
   end
@@ -34,9 +37,13 @@ defmodule ApiProducts.Catalog.Product do
     Repo.one(from product in Product, where: product.id == ^id)
   end
 
-  def get_by_sku(sku), do: Repo.one(from product in Product, where: product.sku == ^sku)
+  def get_by_sku(sku) do
+    IO.inspect(sku)
+    Repo.one(from product in Product, where: product.sku == ^sku)
+  end
 
   def create(product, attrs \\ %{}) do
+    #IO.inspect(attrs)
     product
     |> changeset(attrs)
     |> Repo.insert()
@@ -48,7 +55,7 @@ defmodule ApiProducts.Catalog.Product do
     |> Repo.update()
   end
 
-  def delete(product), do: Repo.delete(product)
+  def delete(id), do: get(id) |> Repo.delete()
 
   def delete_all(), do: Repo.delete_all(Product)
 

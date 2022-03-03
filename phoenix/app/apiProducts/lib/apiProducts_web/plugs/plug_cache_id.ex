@@ -16,7 +16,7 @@ defmodule ApiProductsWeb.Plugs.PlugCacheId do
       {:ok, product} ->
         assign(conn, :product, product)
 
-        _ ->
+      _ ->
         case Product.get(id) do
           nil ->
             conn
@@ -26,7 +26,7 @@ defmodule ApiProductsWeb.Plugs.PlugCacheId do
           product ->
             Cache.set(product.id, product)
             assign(conn, :product, product)
-      end
+        end
     end
   end
 end
