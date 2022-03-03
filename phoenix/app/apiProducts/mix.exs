@@ -18,9 +18,7 @@ defmodule ApiProducts.MixProject do
   #
   # Type `mix help compile.app` for more information.
   def application do
-    [
-      mod: {ApiProducts.Application, []},
-      extra_applications: [:logger, :runtime_tools, :tirexs]]
+    [mod: {ApiProducts.Application, []}, extra_applications: [:logger, :runtime_tools, :tirexs]]
   end
 
   # Specifies which paths to compile per environment.
@@ -46,6 +44,7 @@ defmodule ApiProducts.MixProject do
       {:redix, "~> 1.1"},
       {:exredis, ">= 0.2.4"},
       {:mock, "~> 0.3.0", only: :test},
+      {:ecto_sql, "~> 3.4"},
       {:tirexs, "~> 0.8"}
     ]
   end
