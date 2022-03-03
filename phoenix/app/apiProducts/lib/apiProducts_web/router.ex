@@ -7,6 +7,6 @@ defmodule ApiProductsWeb.Router do
 
   scope "/", ApiProductsWeb do
     pipe_through :api
-    resources "/products", ProductController, only: [:index, :show, :create, :update, :delete]
+    resources "/products", ProductController, except: [:new, :edit]
   end
 end
