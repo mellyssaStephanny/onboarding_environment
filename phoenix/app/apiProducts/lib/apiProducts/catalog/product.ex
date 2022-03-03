@@ -20,7 +20,6 @@ defmodule ApiProducts.Catalog.Product do
 
   @doc false
   def changeset(product, attrs) do
-    IO.inspect(attrs)
     product
     |> cast(attrs, [:sku, :name, :description, :qtd, :price, :barcode])
     |> validate_required([:sku, :name, :description, :qtd, :price, :barcode])
@@ -38,12 +37,10 @@ defmodule ApiProducts.Catalog.Product do
   end
 
   def get_by_sku(sku) do
-    IO.inspect(sku)
     Repo.one(from product in Product, where: product.sku == ^sku)
   end
 
   def create(product, attrs \\ %{}) do
-    #IO.inspect(attrs)
     product
     |> changeset(attrs)
     |> Repo.insert()
