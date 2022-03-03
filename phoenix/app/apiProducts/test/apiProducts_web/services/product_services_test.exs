@@ -41,14 +41,12 @@ defmodule ApiProductsWeb.ProductServicesTest do
   describe "fetch_all/1" do
     test "lists all products by elasticsearch" do
       with_mock(Tirexs.HTTP, get: fn _index -> {:ok, 200} end) do
-
         assert_called(Tirexs.HTTP.get("api-products/products/_search"))
       end
     end
 
     test "lists all products by database", %{product: product} do
       with_mock(Catalog, list_product: fn _get_product -> {:ok, 201} end) do
-
         assert_called(Product.list(product))
       end
     end
@@ -57,7 +55,6 @@ defmodule ApiProductsWeb.ProductServicesTest do
   describe "create/1" do
     test "create product with valid params", %{create_attrs: create_attrs} do
       with_mock(IndexProduct, put_product: fn _produxt_params -> {:ok, 201} end) do
-
         {:ok, create_attrs} = Product.create(create_attrs)
         assert called(IndexProduct.put_product(create_attrs))
       end
@@ -84,7 +81,6 @@ defmodule ApiProductsWeb.ProductServicesTest do
 
     test "delete product", %{product: product} do
       with_mock(IndexProduct, delete_product: fn _delete -> {:ok, 201} end) do
-
         Product.delete(product)
 
         assert_called(IndexProduct.delete_product(product))
