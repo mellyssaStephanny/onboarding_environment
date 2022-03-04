@@ -19,15 +19,7 @@ defmodule ApiProductsWeb.ProductControllerTest do
     price: 456.7,
     barcode: "987654321"
   }
-  # @expected_attrs %{
-  #   id: "61f161dbd448f703274c5d39",
-  #   qtd: 19,
-  #   description: "expected description",
-  #   name: "expected name",
-  #   price: 157.9,
-  #   sku: "sku-expected",
-  #   barcode: "0102030405"
-  # }
+
   @invalid_attrs %{qtd: nil, description: nil, name: nil, price: nil, sku: nil, barcode: nil}
 
   def fixture(:product) do
@@ -64,26 +56,26 @@ defmodule ApiProductsWeb.ProductControllerTest do
       conn = post(conn, Routes.product_path(conn, :create), product: @create_attrs)
 
       assert json_response(conn, 422)["errors"] == %{
-               "sku" => ["can't be blank"],
-               "qtd" => ["can't be blank"],
-               "name" => ["can't be blank"],
-               "price" => ["can't be blank"],
-               "barcode" => ["can't be blank"],
-               "description" => ["can't be blank"]
-             }
+        "sku" => ["can't be blank"],
+        "qtd" => ["can't be blank"],
+        "name" => ["can't be blank"],
+        "price" => ["can't be blank"],
+        "barcode" => ["can't be blank"],
+        "description" => ["can't be blank"]
+      }
     end
 
     test "return invalid params", %{conn: conn} do
       conn = post(conn, Routes.product_path(conn, :create), product: @invalid_attrs)
 
       assert json_response(conn, 422)["errors"] == %{
-               "sku" => ["can't be blank"],
-               "qtd" => ["can't be blank"],
-               "name" => ["can't be blank"],
-               "price" => ["can't be blank"],
-               "barcode" => ["can't be blank"],
-               "description" => ["can't be blank"]
-             }
+        "sku" => ["can't be blank"],
+        "qtd" => ["can't be blank"],
+        "name" => ["can't be blank"],
+        "price" => ["can't be blank"],
+        "barcode" => ["can't be blank"],
+        "description" => ["can't be blank"]
+      }
     end
   end
 
@@ -102,13 +94,13 @@ defmodule ApiProductsWeb.ProductControllerTest do
       conn = put(conn, Routes.product_path(conn, :update, id), product: @invalid_attrs)
 
       assert json_response(conn, 422)["errors"] == %{
-               "sku" => ["can't be blank"],
-               "qtd" => ["can't be blank"],
-               "name" => ["can't be blank"],
-               "price" => ["can't be blank"],
-               "barcode" => ["can't be blank"],
-               "description" => ["can't be blank"]
-             }
+        "sku" => ["can't be blank"],
+        "qtd" => ["can't be blank"],
+        "name" => ["can't be blank"],
+        "price" => ["can't be blank"],
+        "barcode" => ["can't be blank"],
+        "description" => ["can't be blank"]
+      }
     end
   end
 
@@ -144,7 +136,7 @@ defmodule ApiProductsWeb.ProductControllerTest do
     end
 
     test "renders error when data is invalid", %{conn: conn} do
-      conn = get(conn, Routes.product_path(conn, :show, "id"))
+      conn = get(conn, Routes.product_path(conn, :show, _id = "61e580fc6057a40203db022e"))
       response(conn, 404)
     end
   end

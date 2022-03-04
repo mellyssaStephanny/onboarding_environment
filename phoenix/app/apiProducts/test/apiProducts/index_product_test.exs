@@ -22,7 +22,7 @@ defmodule ApiProducts.IndexProductTest do
   @invalid_id "61f1768ad157f704580d54f1"
 
   setup do
-    IndexProduct.delete_product()
+    #IndexProduct.delete_product()
     :ok
   end
 
@@ -54,10 +54,16 @@ defmodule ApiProducts.IndexProductTest do
 
   describe "update product/1" do
     test "update a product if id is valid" do
-      IndexProduct.put_product(@update_product)
-      product = IndexProduct.put_product(@update_product.id)
-
-      assert product[:_id] == @product.id
+      {:ok, [product | _]} = IndexProduct.search_product(%{"sku" => "some-sku"})
+      # product["sku"] = "some-sku"
+      # product["name"] = "some name"
+      require IEx; IEx.pry()
+      product.sku = "new sku"
+      product.name = "new name"
+      update_product = IndexProduct.put_product(product)
+      assert update_product.sku == "new sku"
+      assert update_product.name == "new name"
+      assert product == update_product
     end
   end
 

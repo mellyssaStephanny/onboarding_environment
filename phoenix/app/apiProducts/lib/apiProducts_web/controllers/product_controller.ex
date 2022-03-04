@@ -18,7 +18,7 @@ defmodule ApiProductsWeb.ProductController do
   end
 
   def create(_conn, %{"product" => product_params}) do
-    #IO.inspect(product_params)
+    # IO.inspect(product_params)
     case Product.create(%Product{}, product_params) do
       {:ok, %Product{} = product} ->
         {:ok, :created, product}
@@ -52,4 +52,6 @@ defmodule ApiProductsWeb.ProductController do
         {:ok, :no_content}
     end
   end
+
+  def show(conn, %{"id" => _id}), do: {:ok, conn.assigns[:product]}
 end
