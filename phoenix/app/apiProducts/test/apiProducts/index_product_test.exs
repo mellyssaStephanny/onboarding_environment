@@ -2,8 +2,10 @@ defmodule ApiProducts.IndexProductTest do
   use ApiProductsWeb.ConnCase, async: false
 
   alias ApiProducts.IndexProduct
+  import Mock
 
   @product %{
+    id: "5e9618293ab04b0046343fe8",
     qtd: 42,
     description: "some description",
     name: "some name",
@@ -11,59 +13,65 @@ defmodule ApiProducts.IndexProductTest do
     sku: "some-sku",
     barcode: "123456789"
   }
-  @update_product %{
-    qtd: 43,
-    description: "some updated description",
-    name: "some updated name",
-    price: 456.7,
-    sku: "some-updated-sku",
-    barcode: "987654321"
+  @product_response %{
+    _id: "5e9618293ab04b0046343fe8",
+    _index: "api-products",
+    _shards: %{failed: 0, successful: 1, total: 2},
+    _type: "products",
+    _version: 19,
+    created: false
   }
   @invalid_id "61f1768ad157f704580d54f1"
+  @valid_url "/api-products/products/5e9618293ab04b0046343fe8"
 
   setup do
-    #IndexProduct.delete_product()
+    # IndexProduct.delete_product()
+    :ok
+  end
+
+  setup_with_mocks [
+    {Tirexs.HTTP, [],
+     put: fn
+       @valid_url, _json -> {:ok, 200, @product_response}
+       _invalid_url, _json -> {:error, 422}
+     end,
+     delete: fn
+       @valid_url -> {:ok, 204}
+       _invalid_url -> {:error, 422}
+     end,
+     get: fn
+       _valid_url -> {:ok, 200, %{hits: %{hits: []}}}
+     end}
+  ] do
     :ok
   end
 
   describe "put product/1" do
-    test "create new product" do
-      assert IndexProduct.put_product(@product) == {:ok, 201}
-    end
-  end
-
-  describe "get product/1" do
-    test "get product if id invalid" do
-      product = IndexProduct.put_product(@invalid_id)
+    test "put product if id invalid" do
+      product = IndexProduct.put_product(@product)
       assert product == {:error, 422}
+      assert_called(Tirexs.HTTP.put(:_, :_))
     end
 
-    test "get product if id is valid" do
-      IndexProduct.put_product(@product)
-      product = IndexProduct.put_product(@product.id)
-      assert product[:_id] == @product.id
+    test "put product if id is valid" do
+      product = IndexProduct.put_product(@product)
+      assert product
+      assert_called(Tirexs.HTTP.put(:_, :_))
     end
   end
 
   describe "search product/1" do
     test "search product" do
-      IndexProduct.put_product(@product)
-      assert IndexProduct.search_product(%{"id" => "61f1768ad157f704580d54f1"}) == {"id"}
+      assert IndexProduct.search_product(@product)
+      assert_called(Tirexs.HTTP.get(:_))
     end
   end
 
   describe "update product/1" do
     test "update a product if id is valid" do
-      {:ok, [product | _]} = IndexProduct.search_product(%{"sku" => "some-sku"})
-      # product["sku"] = "some-sku"
-      # product["name"] = "some name"
-      require IEx; IEx.pry()
-      product.sku = "new sku"
-      product.name = "new name"
-      update_product = IndexProduct.put_product(product)
-      assert update_product.sku == "new sku"
-      assert update_product.name == "new name"
-      assert product == update_product
+      product = IndexProduct.put_product(@product)
+      assert product
+      assert_called(Tirexs.HTTP.put(:_, :_))
     end
   end
 
