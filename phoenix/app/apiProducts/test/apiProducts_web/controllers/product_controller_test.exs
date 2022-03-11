@@ -2,6 +2,8 @@ defmodule ApiProductsWeb.ProductControllerTest do
   use ApiProductsWeb.ConnCase, async: true
 
   alias ApiProducts.Catalog.Product
+  alias ApiProducts.Repo
+  alias ApiProducts.Cache
 
   @create_attrs %{
     qtd: 42,
@@ -28,8 +30,8 @@ defmodule ApiProductsWeb.ProductControllerTest do
   end
 
   setup %{conn: conn} do
-    # Repo.delete_all(Product)
-    # Cache.flush()
+    Repo.delete_all(Product)
+    Cache.flush()
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
@@ -52,30 +54,17 @@ defmodule ApiProductsWeb.ProductControllerTest do
       assert expected_product
     end
 
-    test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, Routes.product_path(conn, :create), product: @create_attrs)
-
-      assert json_response(conn, 422)["errors"] == %{
-        "sku" => ["can't be blank"],
-        "qtd" => ["can't be blank"],
-        "name" => ["can't be blank"],
-        "price" => ["can't be blank"],
-        "barcode" => ["can't be blank"],
-        "description" => ["can't be blank"]
-      }
-    end
-
     test "return invalid params", %{conn: conn} do
       conn = post(conn, Routes.product_path(conn, :create), product: @invalid_attrs)
 
       assert json_response(conn, 422)["errors"] == %{
-        "sku" => ["can't be blank"],
-        "qtd" => ["can't be blank"],
-        "name" => ["can't be blank"],
-        "price" => ["can't be blank"],
-        "barcode" => ["can't be blank"],
-        "description" => ["can't be blank"]
-      }
+               "sku" => ["can't be blank"],
+               "qtd" => ["can't be blank"],
+               "name" => ["can't be blank"],
+               "price" => ["can't be blank"],
+               "barcode" => ["can't be blank"],
+               "description" => ["can't be blank"]
+             }
     end
   end
 
@@ -87,30 +76,31 @@ defmodule ApiProductsWeb.ProductControllerTest do
 
       assert %{"id" => id} = json_response(conn, 200)["product"]
 
-      refute Product.get(id)
+      assert Product.get(id) != nil
     end
 
     test "renders errors when data is invalid", %{conn: conn, product: %Product{id: id} = product} do
       conn = put(conn, Routes.product_path(conn, :update, id), product: @invalid_attrs)
 
       assert json_response(conn, 422)["errors"] == %{
-        "sku" => ["can't be blank"],
-        "qtd" => ["can't be blank"],
-        "name" => ["can't be blank"],
-        "price" => ["can't be blank"],
-        "barcode" => ["can't be blank"],
-        "description" => ["can't be blank"]
-      }
+               "sku" => ["can't be blank"],
+               "qtd" => ["can't be blank"],
+               "name" => ["can't be blank"],
+               "price" => ["can't be blank"],
+               "barcode" => ["can't be blank"],
+               "description" => ["can't be blank"]
+             }
     end
   end
 
   describe "delete product" do
     setup [:create_product]
 
-    test "deletes chosen product", %{conn: conn, product: %Product{id: id} = product} do
-      response = conn |> delete(Routes.product_path(conn, :delete, id))
+    test "deletes chosen product", %{conn: conn, product: product} do
+      assert Product.get(product.id) == product
+      conn = delete(conn, Routes.product_path(conn, :delete, product))
 
-      assert response |> json_response(204)
+      response(conn, 204)
 
       assert is_nil(Product.get(product.id))
     end
