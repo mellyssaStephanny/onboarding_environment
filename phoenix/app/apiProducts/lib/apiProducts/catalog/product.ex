@@ -8,12 +8,12 @@ defmodule ApiProducts.Catalog.Product do
   @primary_key {:id, :binary_id, autogenerate: true}
 
   schema "products" do
-    field :sku, :string
-    field :name, :string
-    field :qtd, :integer
-    field :price, :float
-    field :barcode, :string
-    field :description, :string
+    field(:sku, :string)
+    field(:name, :string)
+    field(:qtd, :integer)
+    field(:price, :float)
+    field(:barcode, :string)
+    field(:description, :string)
 
     timestamps()
   end
@@ -33,11 +33,11 @@ defmodule ApiProducts.Catalog.Product do
   def list, do: Repo.all(Product)
 
   def get(id) do
-    Repo.one(from product in Product, where: product.id == ^id)
+    Repo.one(from(product in Product, where: product.id == ^id))
   end
 
   def get_by_sku(sku) do
-    Repo.one(from product in Product, where: product.sku == ^sku)
+    Repo.one(from(product in Product, where: product.sku == ^sku))
   end
 
   def create(product, attrs \\ %{}) do
@@ -52,7 +52,15 @@ defmodule ApiProducts.Catalog.Product do
     |> Repo.update()
   end
 
-  def delete(id), do: get(id) |> Repo.delete()
+  def delete(product) do
+    case Repo.delete(product) do
+      nil ->
+        {:error, :not_found}
+
+      _ ->
+        {:ok, "no content"}
+    end
+  end
 
   def delete_all(), do: Repo.delete_all(Product)
 
