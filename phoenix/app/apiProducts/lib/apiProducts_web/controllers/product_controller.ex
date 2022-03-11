@@ -30,7 +30,7 @@ defmodule ApiProductsWeb.ProductController do
   def update(conn, id) do
     product = Product.get(id)
 
-    case Product.update(product, product_params) do
+    case Product.update(product, id) do
       {:ok, product} = result ->
         Cache.set(product.id, product)
         IndexProduct.put_product(product)
