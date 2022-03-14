@@ -10,16 +10,15 @@ defmodule ApiProductsWeb.ProductController do
 
   plug(ApiProductsWeb.Plugs.PlugCacheId when action in [:show, :update, :delete])
 
-  def index(conn, params) do
-    case IndexProduct.search_product(params) do
-      {:ok, products} -> json(conn, products)
-      {:error, 422} -> {:error, "Bad Request"}
-    end
+  def index(conn, _) do
+    list = Product.list()
+    conn |> put_status(200) |> json(list)
   end
 
   def create(_conn, %{"product" => product_params}) do
     case Product.create(%Product{}, product_params) do
       {:ok, %Product{} = product} ->
+        IndexProduct.put_product(product)
         {:ok, :created, product}
 
       {:error, error} ->
@@ -27,32 +26,45 @@ defmodule ApiProductsWeb.ProductController do
     end
   end
 
-  def update(conn, id) do
-    product = Product.get(id)
+  def update(conn, %{"sku" => sku} = params) do
+    product = Product.get_by_sku(sku)
 
-    case Product.update(product, id) do
+    case Product.update(product, params) do
       {:ok, product} = result ->
         Cache.set(product.id, product)
         IndexProduct.put_product(product)
 
         result
 
+      {:error, :not_found} ->
+        {:error, "Product not found"}
+
       {:error, error} ->
         {:error, error}
     end
   end
 
-  def delete(conn, id) do
-    product = conn.assigns[:product]
-
-    case Product.delete(product) do
+  def delete(conn, %{"sku" => sku}) do
+    case Product.delete_by_sku(sku) do
       {:ok, _} ->
-        {:ok, :no_content}
+        conn |> put_status(200) |> json(%{"message" => "Product successfully deleted"})
+
+      {:error, :not_found} ->
+        {:error, "Produtct not found"}
 
       _ ->
-        {:error, :not_found}
+        {:error, "Unidentified error"}
     end
   end
 
-  def show(conn, %{"id" => _id}), do: {:ok, conn.assigns[:product]}
+  def show(conn, %{"sku" => sku}) do
+    case Product.get_by_sku(sku) do
+      nil ->
+        {:error, "Product not found"}
+
+      product ->
+        resp = Product.format_product(product)
+        conn |> put_status(200) |> json(resp)
+    end
+  end
 end
