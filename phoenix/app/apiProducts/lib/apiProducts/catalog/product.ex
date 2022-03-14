@@ -30,7 +30,24 @@ defmodule ApiProducts.Catalog.Product do
     |> validate_length(:barcode, min: 8, max: 13)
   end
 
-  def list, do: Repo.all(Product)
+  def list do
+    list =
+      Product
+      |> Repo.all()
+      |> Enum.map(fn product -> product_body(product) end)
+  end
+
+  def product_body(product) do
+    %{
+      "id" => product.id,
+      "sku" => product.sku,
+      "qtd" => product.qtd,
+      "name" => product.name,
+      "price" => product.price,
+      "barcode" => product.barcode,
+      "description" => product.description
+    }
+  end
 
   def get(id) do
     Repo.one(from(product in Product, where: product.id == ^id))
@@ -46,11 +63,20 @@ defmodule ApiProducts.Catalog.Product do
     |> Repo.insert()
   end
 
+  def update(nil, attrs), do: {:error, :not_found}
+
   def update(product, attrs) do
     product
     |> Product.changeset(attrs)
     |> Repo.update()
   end
+
+  def delete_by_sku(sku) do
+    product = get_by_sku(sku)
+    delete(product)
+  end
+
+  def delete(nil), do: {:error, :not_found}
 
   def delete(product) do
     case Repo.delete(product) do
