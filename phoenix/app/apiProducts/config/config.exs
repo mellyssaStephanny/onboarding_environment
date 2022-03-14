@@ -9,7 +9,7 @@ use Mix.Config
 
 config :apiProducts,
   ecto_repos: [ApiProducts.Repo]
-  
+
 # Configures the endpoint
 config :apiProducts, ApiProductsWeb.Endpoint,
   url: [host: "localhost"],

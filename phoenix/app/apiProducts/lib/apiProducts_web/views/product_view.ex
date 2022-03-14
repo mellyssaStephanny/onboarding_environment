@@ -11,11 +11,14 @@ defmodule ApiProductsWeb.ProductView do
   end
 
   def render("product.json", %{product: product}) do
-    %{id: product.id,
+    %{
+      id: product.id,
       name: product.name,
       sku: product.sku,
       description: product.description,
       qtd: product.qtd,
-      price: product.price}
+      barcode: product.barcode,
+      price: product.price
+    }
   end
 end

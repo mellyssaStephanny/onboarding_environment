@@ -1,24 +1,25 @@
 defmodule ApiProducts.IndexProduct do
-
   import Tirexs.HTTP
 
-  def update_product(product) do
-    product_json =
-       %{
-        id: product.id,
-        name: product.name,
-        sku: product.sku,
-        description: product.description,
-        qtd: product.qtd,
-        price: product.price,
-        date: DateTime.to_iso8601(DateTime.utc_now())
-      }
-
-    put("/api-products/products/#{product_json.id}", product_json)
+  def put_product(product) do
+    put("api-products/products/#{product.id}", format_json(product))
   end
 
-  def delete_product(product) do
-    delete("/api-products/products/#{product.id}")
+  defp format_json(product) do
+    %{
+      id: product.id,
+      sku: product.sku,
+      qtd: product.qtd,
+      name: product.name,
+      price: product.price,
+      barcode: product.barcode,
+      description: product.description,
+      date: DateTime.to_iso8601(DateTime.utc_now())
+    }
+  end
+
+  def delete_product(id) do
+    delete("/api-products/products/#{id}")
   end
 
   def search_product(params) do
@@ -29,7 +30,7 @@ defmodule ApiProducts.IndexProduct do
     |> format_response()
   end
 
-  defp format_response({:ok, 200, %{hits: %{hits: hits}}}), 
+  defp format_response({:ok, 200, %{hits: %{hits: hits}}}),
     do: {:ok, Enum.map(hits, & &1._source)}
 
   defp format_response({:error, 404, _result}), do: {:error, "Not found"}

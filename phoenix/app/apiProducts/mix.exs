@@ -18,9 +18,7 @@ defmodule ApiProducts.MixProject do
   #
   # Type `mix help compile.app` for more information.
   def application do
-    [
-      mod: {ApiProducts.Application, []},
-      extra_applications: [:logger, :runtime_tools, :tirexs]]
+    [mod: {ApiProducts.Application, []}, extra_applications: [:logger, :runtime_tools, :tirexs]]
   end
 
   # Specifies which paths to compile per environment.
@@ -41,9 +39,12 @@ defmodule ApiProducts.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:mongodb_ecto, github: "michalmuskala/mongodb_ecto"},
+      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:redis, "~> 0.1"},
       {:redix, "~> 1.1"},
       {:exredis, ">= 0.2.4"},
+      {:mock, "~> 0.3.0", only: :test},
+      {:ecto_sql, "~> 3.4"},
       {:tirexs, "~> 0.8"}
     ]
   end
@@ -59,7 +60,7 @@ defmodule ApiProducts.MixProject do
       setup: ["deps.get", "ecto.setup"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
+      test: ["ecto.create --quiet", "test"]
     ]
   end
 end

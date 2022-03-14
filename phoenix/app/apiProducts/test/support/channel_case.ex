@@ -28,13 +28,7 @@ defmodule ApiProductsWeb.ChannelCase do
     end
   end
 
-  setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(ApiProducts.Repo)
-
-    unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(ApiProducts.Repo, {:shared, self()})
-    end
-
+  setup _tags do
     :ok
   end
 end
